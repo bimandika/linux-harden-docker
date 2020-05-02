@@ -1,0 +1,647 @@
+ - hosts: all
+   vars:
+   tasks:  
+    - name: 1.1.1.1 Ensure mounting of cramfs filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install cramfs(\\s|$)"
+        line: "install cramfs /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1111
+      ignore_errors: true
+    - name: debug_1111
+      debug: 
+        msg: "{% if audit_1111.failed == false and audit_1111.changed == false %} 1.1.1.1 Ensure mounting of cramfs filesystems is disabled [PASSED] {% else %} 1.1.1.1 Ensure mounting of cramfs filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1111
+    - name: 1.1.1.2 Ensure mounting of freevxfs filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install freevxfs(\\s|$)"
+        line: "install freevxfs /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1112
+      ignore_errors: true
+    - name: debug_1112
+      debug: 
+        msg: "{% if audit_1112.failed == false and audit_1111.changed == false %} 1.1.1.2 Ensure mounting of freevxfs filesystems is disabled [PASSED] {% else %} 1.1.1.2 Ensure mounting of freevxfs filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1112
+    - name: 1.1.1.3 Ensure mounting of jffs2 filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install jffs2(\\s|$)"
+        line: "install jffs2 /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1113
+      ignore_errors: true
+    - name: debug_1113
+      debug: 
+        msg: "{% if audit_1113.failed == false and audit_1111.changed == false %}  1.1.1.3 Ensure mounting of jffs2 filesystems is disabled [PASSED] {% else %}  1.1.1.3 Ensure mounting of jffs2 filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1113
+    - name: 1.1.1.4 Ensure mounting of hfs filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install hfs(\\s|$)"
+        line: "install hfs /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1114
+      ignore_errors: true
+    - name: debug_1114
+      debug: 
+        msg: "{% if audit_1113.failed == false and audit_1111.changed == false %}  1.1.1.4 Ensure mounting of hfs filesystems is disabled [PASSED] {% else %}  1.1.1.4 Ensure mounting of hfs filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1114
+    - name: 1.1.1.5 Ensure mounting of hfsplus filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install hfsplus(\\s|$)"
+        line: "install hfsplus /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1115
+      ignore_errors: true
+    - name: debug_1115
+      debug: 
+        msg: "{% if audit_1115.failed == false and audit_1111.changed == false %}  1.1.1.5 Ensure mounting of hfsplus filesystems is disabled [PASSED] {% else %}  1.1.1.5 Ensure mounting of hfsplus filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1115
+    - name: 1.1.1.6 Ensure mounting of squashfs filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install squashfs(\\s|$)"
+        line: "install squashfs /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1116
+      ignore_errors: true
+    - name: debug_1116
+      debug: 
+        msg: "{% if audit_1116.failed == false and audit_1111.changed == false %}  1.1.1.6 Ensure mounting of squashfs filesystems is disabled [PASSED] {% else %}  1.1.1.6 Ensure mounting of squashfs filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1116
+    - name: 1.1.1.7 Ensure mounting of udf filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install udf(\\s|$)"
+        line: "install udf /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1117
+      ignore_errors: true
+    - name: debug_1117
+      debug: 
+        msg: "{% if audit_1117.failed == false and audit_1111.changed == false %}  1.1.1.7 Ensure mounting of udf filesystems is disabled [PASSED] {% else %} 1.1.1.7 Ensure mounting of udf filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1117
+    - name: 1.1.1.8 Ensure mounting of FAT filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install FAT(\\s|$)"
+        line: "install FAT /bin/true"
+        create: no
+      check_mode: true
+      register: audit_1118
+      ignore_errors: true
+    - name: debug_1118
+      debug: 
+        msg: "{% if audit_1118.failed == false and audit_1111.changed == false %} 1.1.1.8 Ensure mounting of FAT filesystems is disabled [PASSED] {% else %} 1.1.1.8 Ensure mounting of FAT filesystems is disabled [NOT PASSED] {% endif %}"
+      register: result_1118
+    - name: 1.1.2 Ensure separate partition exists for /tmp
+      command: findmnt --fstab '/tmp'
+      register: audit_112
+      ignore_errors: true
+    - name: debug_112
+      debug:
+        msg: "{% if audit_112.failed == false %}1.1.2 Ensure separate partition exists for /tmp [PASSED] {% else %} 1.1.2 Ensure separate partition exists for /tmp [NOT PASSED] {% endif %}"
+      register: result_112
+    - name: 1.1.3 Ensure nodev option set on /tmp partition
+      shell: mount | grep /tmp | grep nodev
+      register: audit_113
+      ignore_errors: true
+    - name: debug_113
+      debug:
+        msg: "{% if audit_113.failed == false %}1.1.3 Ensure nodev option set on /tmp partition [PASSED] {% else %} 1.1.3 Ensure nodev option set on /tmp partition [NOT PASSED] {% endif %}"
+      register: result_113
+    - name: 1.1.4 Ensure nosuid option set on /tmp partition
+      shell: mount | grep /tmp | grep nosuid
+      register: audit_114
+      ignore_errors: true
+    - name: debug_114
+      debug:
+        msg: "{% if audit_114.failed == false %}1.1.4 Ensure nosuid option set on /tmp partition [PASSED] {% else %} 1.1.4 Ensure nosuid option set on /tmp partition [NOT PASSED] {% endif %}"
+      register: result_114
+    - name: 1.1.5 Ensure noexec option set on /tmp partition
+      shell: mount | grep /tmp | grep noexec
+      register: audit_115
+      ignore_errors: true
+    - name: debug_115
+      debug:
+        msg: "{% if audit_115.failed == false %}1.1.5 Ensure noexec option set on /tmp partition [PASSED] {% else %} 1.1.5 Ensure noexec option set on /tmp partition [NOT PASSED] {% endif %}"
+      register: result_115
+    - name: 1.1.6 Ensure separate partition exists for /var
+      command: findmnt --fstab '/var'
+      register: audit_116
+      ignore_errors: true
+    - name: debug_116
+      debug:
+        msg: "{% if audit_116.failed == false %}1.1.6 Ensure separate partition exists for /var [PASSED] {% else %} 1.1.6 Ensure separate partition exists for /var [NOT PASSED] {% endif %}"
+      register: result_116
+    - name: 1.1.7 Ensure separate partition exists for /var/tmp
+      command: findmnt --fstab '/var/tmp'
+      register: audit_117
+      ignore_errors: true
+    - name: debug_117
+      debug:
+        msg: "{% if audit_117.failed == false %}1.1.7 Ensure separate partition exists for /var/tmp [PASSED] {% else %} 1.1.7 Ensure separate partition exists for /var/tmp [NOT PASSED] {% endif %}"
+      register: result_117
+    - name: 1.1.8 Ensure nodev option set on /var/tmp partition
+      shell: mount | grep /var/tmp | grep nodev
+      register: audit_118
+      ignore_errors: true
+    - name: debug_118
+      debug:
+        msg: "{% if audit_118.failed == false %}1.1.8 Ensure nodev option set on /var/tmp partition [PASSED] {% else %} 1.1.8 Ensure nodev option set on /var/tmp partition [NOT PASSED] {% endif %}"
+      register: result_118
+    - name: 1.1.9 Ensure nosuid option set on /var/tmp partition
+      shell: mount | grep /var/tmp | grep nosuid
+      register: audit_119
+      ignore_errors: true
+    - name: debug_119
+      debug:
+        msg: "{% if audit_119.failed == false %}1.1.9 Ensure nosuid option set on /var/tmp partition [PASSED] {% else %} 1.1.9 Ensure nosuid option set on /var/tmp partition [NOT PASSED] {% endif %}"
+      register: result_119
+    - name: 1.1.10 Ensure noexec option set on /var/tmp partition
+      shell: mount | grep /var/tmp | grep noexec
+      register: audit_11110
+      ignore_errors: true
+    - name: debug_11110
+      debug:
+        msg: "{% if audit_11110.failed == false %}1.1.10 Ensure noexec option set on /var/tmp partition [PASSED] {% else %} 1.1.10 Ensure noexec option set on /var/tmp partition [NOT PASSED] {% endif %}"
+      register: result_11110
+    - name: 1.1.11 Ensure separate partition exists for /var/log
+      command: findmnt --fstab '/var/log'
+      register: audit_11111
+      ignore_errors: true
+    - name: debug_11111
+      debug:
+        msg: "{% if audit_11111.failed == false %}1.1.11 Ensure separate partition exists for /var/log [PASSED] {% else %} 1.1.11 Ensure separate partition exists for /var/log [NOT PASSED] {% endif %}"
+      register: result_11111
+    - name: 1.1.12 Ensure separate partition exists for /var/log/audit
+      command: findmnt --fstab '/var/log'
+      register: audit_11112
+      ignore_errors: true
+    - name: debug_11112
+      debug:
+        msg: "{% if audit_11112.failed == false %}1.1.12 Ensure separate partition exists for /var/log/audit [PASSED] {% else %} 1.1.12 Ensure separate partition exists for /var/log/audit [NOT PASSED] {% endif %}"
+      register: result_11112
+    - name: 1.1.13 Ensure separate partition exists for /home
+      command: findmnt --fstab '/home'
+      register: audit_11113
+      ignore_errors: true
+    - name: debug_11113
+      debug:
+        msg: "{% if audit_11113.failed == false %}1.1.13 Ensure separate partition exists for /home [PASSED] {% else %} 1.1.13 Ensure separate partition exists for /home [NOT PASSED] {% endif %}"
+      register: result_11113
+    - name: 1.1.14 Ensure nodev option set on /home partition
+      shell: mount | grep /home | grep nodev
+      register: audit_11114
+      ignore_errors: true
+    - name: debug_11114
+      debug:
+        msg: "{% if audit_11114.failed == false %}1.1.14 Ensure nodev option set on /home partition [PASSED] {% else %} 1.1.14 Ensure nodev option set on /home partition [NOT PASSED] {% endif %}"
+      register: result_11114
+    - name: 1.1.15 Ensure nodev option set on /dev/shm partition
+      shell: mount | grep /dev/shm | grep nodev
+      register: audit_11115
+      ignore_errors: true
+    - name: debug_11115
+      debug:
+        msg: "{% if audit_11115.failed == false %}1.1.15 Ensure nodev option set on /dev/shm partition [PASSED] {% else %} 1.1.15 Ensure nodev option set on /dev/shm partition [NOT PASSED] {% endif %}"
+      register: result_11115
+    - name: 1.1.16 Ensure nosuid option set on /dev/shm partition
+      shell: mount | grep /dev/shm | grep nosuid
+      register: audit_11116
+      ignore_errors: true
+    - name: debug_11116
+      debug:
+        msg: "{% if audit_11116.failed == false %}1.1.16 Ensure nosuid option set on /dev/shm partition [PASSED] {% else %} 1.1.16 Ensure nosuid option set on /dev/shm partition [NOT PASSED] {% endif %}"
+      register: result_11116
+    - name: 1.1.17 Ensure noexec option set on /dev/shm partition
+      shell: mount | grep /dev/shm | grep noexec
+      register: audit_11117
+      ignore_errors: true
+    - name: debug_11117
+      debug:
+        msg: "{% if audit_11117.failed == false %}1.1.17 Ensure noexec option set on /dev/shm partition [PASSED] {% else %} 1.1.17 Ensure noexec option set on /dev/shm partition [NOT PASSED] {% endif %}"
+      register: result_11117
+    - name: 1.1.21 Ensure sticky bit is set on all world-writable directories
+      shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null
+      register: audit_11121
+      ignore_errors: true
+    - name: debug_11121
+      debug:
+        msg: "{% if audit_11121.failed == false %}1.1.21 Ensure sticky bit is set on all world-writable directories [PASSED] {% else %} 1.1.21 Ensure sticky bit is set on all world-writable directories [NOT PASSED] {% endif %}"
+      register: result_11121
+    - name: 1.1.22 Disable Automounting
+      systemd:
+       name: autofs
+       enabled: yes
+      check_mode: true
+      register: audit_11122
+      ignore_errors: true
+    - name: debug_11122
+      debug:
+        msg: "{% if audit_11122.changed == false %} 1.1.22 Disable Automounting [NOT PASSED] {% else %}  1.1.22 Disable Automounting [PASSED] {% endif %}"
+      register: result_11122
+    - name: 1.2.1 Ensure package manager repositories are configured
+      find:
+       paths: /etc/yum.repos.d/
+       patterns: "*.repo"
+      register: audit_121
+      ignore_errors: true
+    - name: debug_121
+      debug:
+        msg: "{% if audit_121.examined == 0 %} 1.2.1 Ensure package manager repositories are configured [NOT PASSED] {% else %} 1.2.1 Ensure package manager repositories are configured [PASSED] {% endif %}"
+      register: result_121
+    - name: 1.2.2 Ensure GPG keys are configured
+      command: rpm -q gpg-pubkey --qf '%{name}-%{version}-%{release} --> %{summary}\n'
+      ignore_errors: true
+      register: audit_122
+    - name: debug_122
+      debug:
+        msg: "{% if audit_122.rc == 0 %} 1.2.2 Ensure GPG keys are configured [PASSED] {% else %} 1.2.1 Ensure package manager repositories are configured [NOT PASSED] {% endif %}"
+      register: result_122
+    - name: 1.2.3 Ensure gpgcheck is globally activated
+      lineinfile:
+        path: /etc/yum.conf
+        line: "gpgcheck=1"
+        state: present
+      check_mode: yes
+      ignore_errors: true
+      register: audit_123
+    - name: debug_123
+      debug:
+       msg: "{% if audit_123.changed == true %} 1.2.3 Ensure gpgcheck is globally activated [NOT PASSED] {% else %} 1.2.3 Ensure gpgcheck is globally activated [PASSED] {% endif %}"
+      register: result_123
+    - name: 1.3.1 Ensure AIDE is installed
+      yum:
+       name: aide
+       state: present
+      ignore_errors: true
+      register: audit_131
+    - name: debug_131
+      debug:
+       msg: "{% if audit_131.rc == 0 %} 1.3.1 Ensure AIDE is installed [PASSED] {% else %} 1.3.1 Ensure AIDE is installed [NOT PASSED] {% endif %}"
+      register: result_131
+    - name: 1.3.2 Ensure filesystem integrity is regularly checked
+      shell: crontab -u root -l | grep aide
+      ignore_errors: true
+      register: audit_132
+    - name: debug_132
+      debug:
+       msg: "{% if audit_132.rc == 0 %} 1.3.2 Ensure filesystem integrity is regularly checked [PASSED] {% else %} 1.3.2 Ensure filesystem integrity is regularly checked [NOT PASSED] {% endif %}"
+      register: result_132
+    - name: 1.4.1 Ensure permissions on bootloader config are configured
+      file:
+       path: /boot/grub2/grub.cfg
+       owner: root
+       group: root
+       mode: '0600'
+      check_mode: yes
+      ignore_errors: true
+      register: audit_141
+    - name: debug_141_success
+      debug:
+        msg: "{% if audit_141.failed == false and audit_141.changed == true %} 1.4.1 Ensure permissions on bootloader config are configured [PASSED] {% else %} 1.4.1 Ensure permissions on bootloader config are configured [NOT PASSED] {% endif %}"
+      register: result_141
+    - name: 1.4.2 Ensure bootloader password is set
+      shell: grep GRUB2_PASSWORD /boot/grub2/grub.cfg
+      ignore_errors: true
+      register: audit_142
+    - name: debug_142
+      debug:
+        msg: "{% if audit_142.rc == 1 %} 1.4.2 Ensure bootloader password is set [NOT PASSED] {% else %} 1.4.2 Ensure bootloader password is set [PASSED] {% endif %}"
+      register: result_142
+    - name: 1.4.3.1 Ensure authentication required for single user mode 
+      shell: grep /sbin/sulogin /usr/lib/systemd/system/emergency.service 
+      ignore_errors: true
+      register: audit_1431
+    - name: debug_1431
+      debug:
+       msg: "{% if audit_1431.rc == 0 %} 1.4.3.1 Ensure authentication required for single user mode [PASSED] {% else %} 1.4.3.1 Ensure authentication required for single user mode [NOT PASSED] {% endif %}"
+      register: result_1431
+    - name: 1.4.3.2 Ensure authentication required for single user mode 
+      shell: grep /sbin/sulogin /usr/lib/systemd/system/rescue.service 
+      ignore_errors: true
+      register: audit_1432
+    - name: debug_1432
+      debug:
+       msg: "{% if audit_1432.rc == 0 %} 1.4.3.2 Ensure authentication required for single user mode [PASSED] {% else %} 1.4.3.2 Ensure authentication required for single user mode [NOT PASSED] {% endif %}"
+      register: result_1432
+    - name: 1.5.1 Ensure core dumps are restricted 
+      shell: grep "hard core" /etc/security/limits.conf /etc/security/limits.d/*
+      register: audit_1511
+      ignore_errors: true
+    - name: 1.5.1 Ensure core dumps are restricted 
+      shell: sysctl fs.suid_dumpable
+      register: audit_1512
+      ignore_errors: true
+    - name: debug_1511
+      debug:
+       msg: "{% if audit_1511.stdout | join('') is search('hard core') and audit_1512.stdout | join('') is search('fs.suid_dumpable = 0') %} 1.5.1 Ensure core dumps are restricted [PASSED] {% else %} 1.5.1 Ensure core dumps are restricted [NOT PASSED] {% endif %}"
+      register: result_151
+    - name: 1.5.2 Ensure XD/NX support is enabled
+      shell: set -o pipefail && dmesg|grep -E "NX|XD" | grep " active"
+      register: audit_152
+      ignore_errors: true
+    - name: debug_152
+      debug:
+        msg: "{% if audit_152.stdout | join('') is search('protection: active') %} 1.5.2 Ensure XD/NX support is enabled [PASSED] {% else %} 1.5.2 Ensure XD/NX support is enabled [NOT PASSED] {% endif %}"
+      register: result_152
+    - name: 1.5.3 Ensure address space layout randomization (ASLR) is enabled
+      shell: sysctl kernel.randomize_va_space
+      register: audit_153
+      ignore_errors: true
+    - name: debug_153
+      debug:
+        msg: "{% if audit_153.stdout | join('') is search('kernel.randomize_va_space = 2') %} 1.5.3 Ensure address space layout randomization (ASLR) is enabled [PASSED] {% else %} 1.5.3 Ensure address space layout randomization (ASLR) is enabled [NOT PASSED] {% endif %}"
+      register: result_153
+    - name: 1.5.4 Ensure prelink is disabled
+      yum:
+       name: prelink
+       state: present
+      check_mode: yes
+      ignore_errors: true
+      register: audit_154
+    - name: debug_154
+      debug:
+        msg: "{% if audit_154.failed == false %} 1.5.4 Ensure prelink is disabled [PASSED] {% else %} 1.5.4 Ensure prelink is disabled [NOT PASSED] {% endif %}"
+      register: result_154
+    - name: 1.6.1.1 Ensure SELinux is not disabled in bootloader configuration 
+      shell: grep "^\s*linux" /boot/grub2/grub.cfg
+      register: audit_1611
+      ignore_errors: true
+    - name: debug_1611
+      debug:
+        msg: "{% if audit_1611.stdout | join('') is search('selinux=0') or audit_1611.stdout | join('') is search('enforcing=0') %} 1.6.1.1 Ensure SELinux is not disabled in bootloader configuration [NOT PASSED] {% else %} 1.6.1.1 Ensure SELinux is not disabled in bootloader configuration [PASSED] {% endif %}"
+      register: result_1611   
+    - name: 1.6.1.2 Ensure the SELinux state is enforcing
+      shell: sestatus
+      register: audit_1612
+      ignore_errors: true
+    - name: debug_1612
+      debug:
+        msg: "{% if audit_1612.stdout | join('') is search('SELinux status:                 enabled') and audit_1612.stdout | join('') is search('Current mode:                   enforcing') %} 1.6.1.2 Ensure the SELinux state is enforcing [PASSED] {% else %} 1.6.1.2 Ensure the SELinux state is enforcing [NOT PASSED] {% endif %}"
+      register: result_1612
+    - name: 1.6.1.3 Ensure SELinux policy is configured
+      shell: sestatus
+      register: audit_1613
+      ignore_errors: true
+    - name: debug_1613
+      debug:
+        msg: "{% if audit_1613.stdout | join('') is search('Loaded policy name:             targeted') or audit_1613.stdout | join('') is search('Loaded policy name:             mls') %} 1.6.1.3 Ensure SELinux policy is configured [PASSED] {% else %} 1.6.1.3 Ensure SELinux policy is configured [NOT PASSED] {% endif %}"
+      register: result_1613
+    - name: 1.6.1.4 Ensure SETroubleshoot is not installed
+      yum:
+       name: setroubleshoot
+       state: present
+      check_mode: yes
+      ignore_errors: true
+      register: audit_1614
+    - name: debug_1614
+      debug:
+        msg: "{% if audit_1614.failed == true %} 1.6.1.4 Ensure SETroubleshoot is not installed [PASSED] {% else %} 1.6.1.4 Ensure SETroubleshoot is not installed [NOT PASSED] {% endif %}"
+      register: result_1614
+    - name: 1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed
+      yum:
+       name: mcstrans
+       state: present
+      check_mode: yes
+      ignore_errors: true
+      register: audit_1615
+    - name: debug_1615
+      debug:
+        msg: "{% if audit_1615.failed == true %} 1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed [PASSED] {% else %} 1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed [NOT PASSED] {% endif %}"
+      register: result_1615
+    - name: 1.6.1.6 Ensure no unconfined daemons exist
+      shell: ps -eZ | egrep "initrc" | egrep -vw "tr|ps|egrep|bash|awk" | tr ':' ' ' | awk '{ print $NF }'
+      register: audit_1616
+      ignore_errors: true    
+    - name: debug_1616
+      debug:
+        msg: "{% if audit_1616.rc == 0 %} 1.6.1.6 Ensure no unconfined daemons exist [PASSED] {% else %} 1.6.1.6 Ensure no unconfined daemons exist [NOT PASSED] {% endif %}"
+      register: result_1616
+    - name: 1.6.2 Ensure SELinux is installed
+      yum:
+       name: libselinux
+       state: present
+      check_mode: yes
+      ignore_errors: true
+      register: audit_162
+    - name: debug_162
+      debug:
+        msg: "{% if audit_162.failed == true %} 1.6.1.4 Ensure SETroubleshoot is not installed [PASSED] {% else %} 1.6.1.4 Ensure SETroubleshoot is not installed [NOT PASSED] {% endif %}"
+      register: result_162
+    - name: 1.7.1.1 Ensure message of the day is configured properly
+      shell: egrep '(\\v|\\r|\\m|\\s)' /etc/motd
+      register: audit_1711
+      ignore_errors: true
+    - name: debug_1711
+      debug:
+        msg: "{% if audit_1711.failed == true %} 1.7.1.1 Ensure message of the day is configured properly [PASSED] {% else %} 1.7.1.1 Ensure message of the day is configured properly [NOT PASSED] {% endif %}"
+      register: result_1711
+    - name: 1.7.1.2 Ensure local login warning banner is configured properly
+      shell: egrep '(\\v|\\r|\\m|\\s)' /etc/issue
+      register: audit_1712
+      ignore_errors: true
+    - name: debug_1712
+      debug:
+        msg: "{% if audit_1712.failed == true %} 1.7.1.2 Ensure local login warning banner is configured properly [PASSED] {% else %} 1.7.1.2 Ensure local login warning banner is configured properly [NOT PASSED] {% endif %}"
+      register: result_1712
+    - name: 1.7.1.3 Ensure remote login warning banner is configured properly
+      shell: egrep '(\\v|\\r|\\m|\\s)' /etc/issue.net
+      register: audit_1713
+      ignore_errors: true
+    - name: debug_1713
+      debug:
+        msg: "{% if audit_1713.failed == true %} 1.7.1.3 Ensure remote login warning banner is configured properly [PASSED] {% else %} 1.7.1.3 Ensure remote login warning banner is configured properly [NOT PASSED] {% endif %}"
+      register: result_1713
+    - name: 1.7.1.4 Ensure permissions on /etc/motd are configured
+      file:
+       path: /etc/motd
+       owner: root
+       group: root
+       mode: '0644'
+      check_mode: yes
+      ignore_errors: true
+      register: audit_1714
+    - name: debug_1714
+      debug:
+        msg: "{% if audit_1714.failed == false and audit_1714.changed == false %} 1.7.1.4 Ensure permissions on /etc/motd are configured [PASSED] {% else %} 1.7.1.4 Ensure permissions on /etc/motd are configured [NOT PASSED] {% endif %}"
+      register: result_1714
+    - name: 1.7.1.5 Ensure permissions on /etc/issue are configured
+      file:
+       path: /etc/issue
+       owner: root
+       group: root
+       mode: '0644'
+      check_mode: yes
+      ignore_errors: true
+      register: audit_1715
+    - name: debug_1715
+      debug:
+        msg: "{% if audit_1715.failed == false and audit_1715.changed == false %} 1.7.1.5 Ensure permissions on /etc/issue are configured [PASSED] {% else %} 1.7.1.5 Ensure permissions on /etc/issue are configured [NOT PASSED] {% endif %}"
+      register: result_1715
+    - name: 1.7.1.6 Ensure permissions on /etc/issue.net are configured
+      file:
+       path: /etc/issue.net
+       owner: root
+       group: root
+       mode: '0644'
+      check_mode: yes
+      ignore_errors: true
+      register: audit_1716
+    - name: debug_1716
+      debug:
+        msg: "{% if audit_1716.failed == false and audit_1716.changed == false %} 1.7.1.6 Ensure permissions on /etc/issue.net are configured [PASSED] {% else %} 1.7.1.6 Ensure permissions on /etc/issue.net are configured [NOT PASSED] {% endif %}"
+      register: result_1716
+    - name: 1.7.2 Ensure GDM login banner is configured
+      lineinfile:
+       dest: "{{ item.file }}"
+       regexp: "{{ item.regexp }}"
+       line: "{{ item.line }}"
+       state: present
+      check_mode: true
+      with_items:
+      - { file: '/etc/dconf/profile/gdm', regexp:  'user-db', line: 'user-db:user' }
+      - { file: '/etc/dconf/profile/gdm', regexp:  'system-db', line: 'system-db:gdm' }
+      - { file: '/etc/dconf/profile/gdm', regexp:  'file-db', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults' }
+      - { file: '/etc/dconf/db/gdm.d/01-banner-message',
+          regexp:  '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]' }
+      - { file: '/etc/dconf/db/gdm.d/01-banner-message',
+          regexp:  'banner-message-enable', line: 'banner-message-enable=true' }
+      - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp:  'banner-message-text',
+          line: "banner-message-text='Authorized uses only. All activity may be monitored and reported.'" }
+      register: audit_172
+      ignore_errors: true
+    - name: debug_172
+      debug:
+        msg: "{% if audit_172.results | join('') is search('does not exist') or audit_172.results | join('') is search('line added')  %} 1.7.2 Ensure GDM login banner is configured [NOT PASSED] {% else %} 1.7.2 Ensure GDM login banner is configured [PASSED] {% endif %}"
+      register: result_172
+    - name: 1.8 Ensure updates, patches, and additional security software are installed
+      yum:
+       name: "*"
+       state: latest
+      check_mode: true
+      register: audit_18
+      ignore_errors: true
+    - name: debug_18
+      debug:
+        msg: "{% if audit_18.failed == false and audit_18.changed == true %} 1.8 Ensure updates, patches, and additional security software are installed [PASSED] {% else %} 1.8 Ensure updates, patches, and additional security software are installed [NOT PASSED] {% endif %}"
+      register: result_18
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    - name: result
+      debug:
+        msg: 
+        - "{{ result_1111.msg }}"
+        - "{{ result_1112.msg }}"
+        - "{{ result_1113.msg }}"
+        - "{{ result_1114.msg }}"
+        - "{{ result_1115.msg }}"
+        - "{{ result_1116.msg }}"
+        - "{{ result_1117.msg }}"
+        - "{{ result_1118.msg }}"
+        - "{{ result_112.msg }}"
+        - "{{ result_113.msg }}"
+        - "{{ result_114.msg }}"
+        - "{{ result_115.msg }}"
+        - "{{ result_116.msg }}"
+        - "{{ result_117.msg }}"
+        - "{{ result_118.msg }}"
+        - "{{ result_119.msg }}"
+        - "{{ result_11110.msg }}"
+        - "{{ result_11111.msg }}"
+        - "{{ result_11112.msg }}"
+        - "{{ result_11113.msg }}"
+        - "{{ result_11114.msg }}"       
+        - "{{ result_11115.msg }}"
+        - "{{ result_11116.msg }}"
+        - "{{ result_11117.msg }}"
+        - "{{ result_11121.msg }}"
+        - "{{ result_11122.msg }}"
+        - "{{ result_121.msg }}"     
+        - "{{ result_122.msg }}"   
+        - "{{ result_123.msg }}"  
+        - "{{ result_131.msg }}" 
+        - "{{ result_132.msg }}" 
+        - "{{ result_141.msg }}" 
+        - "{{ result_142.msg }}" 
+        - "{{ result_1431.msg }}" 
+        - "{{ result_1432.msg }}" 
+        - "{{ result_151.msg }}" 
+        - "{{ result_152.msg }}" 
+        - "{{ result_153.msg }}" 
+        - "{{ result_154.msg }}" 
+        - "{{ result_1611.msg }}" 
+        - "{{ result_1612.msg }}"  
+        - "{{ result_1613.msg }}"
+        - "{{ result_1614.msg }}"
+        - "{{ result_1615.msg }}"
+        - "{{ result_1616.msg }}"
+        - "{{ result_1711.msg }}"
+        - "{{ result_1712.msg }}"
+        - "{{ result_1713.msg }}"
+        - "{{ result_1714.msg }}"
+        - "{{ result_1715.msg }}"
+        - "{{ result_1716.msg }}" 
+        - "{{ result_18.msg }}" 
