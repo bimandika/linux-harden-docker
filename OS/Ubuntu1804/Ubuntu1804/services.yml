@@ -164,7 +164,6 @@
             enabled: no
         notify: restart xinetd
         when: tftp_service.stat.exists
-      ignore_errors: true
 
     - name: 2.1.10 Ensure xinetd is not enabled
       service:
@@ -173,7 +172,245 @@
        enabled: false
       ignore_errors: true
 
+    - name: 2.1.11 Ensure openbsd-inetd is not installed
+      apt:
+       name: openbsd-inetd
+       state: absent
+      ignore_errors: true
+
+    - name: 2.2.1.1 Ensure time synchronization is in use
+      block:
+      - name: 2.2.1.1 Ensure time synchronization is in use (service install)
+        apt:
+            name: ntp
+            state: present
+            install_recommends: false
+      - name: 2.2.1.1 Ensure time synchronization is in use (service start)
+        service:
+            name: ntp
+            state: started
+            enabled: true
+      - name: 2.2.1.1 Ensure time synchronization is in use (service stop ntp)
+        service:
+            name: ntp
+            state: stopped
+            enabled: false
+      - name: 2.2.1.1 Ensure time synchronization is in use (service install)
+        apt:
+          name: chrony
+          state: present
+          install_recommends: false
+      - name: 2.2.1.1 Ensure time synchronization is in use (service stop chrony)
+        service:
+            name: chronyd
+            state: stopped
+            enabled: false
+        ignore_errors: true
+
+    - name: 2.2.1.2 Ensure ntp is configured
+      block:
+      - name: 2.2.1.2 Ensure ntp is configured modify /etc/ntp.conf
+        template:
+            src: files/ntp.conf.j2
+            dest: /etc/ntp.conf
+            owner: root
+            group: root
+            mode: 0644
+      - name: 2.2.1.2 Ensure ntp is configured modify /etc/init.d/ntp
+        lineinfile:
+            dest: /etc/init.d/ntp
+            regexp: "^RUNASUSER"
+            line: "RUNASUSER=ntp"
+        ignore_errors: true
+
+      - name: 2.2.1.3 Ensure chrony is configured
+        template:
+         src: files/chrony.conf.j2
+         dest: /etc/chrony/chrony.conf
+         owner: root
+         group: root
+         mode: 0644
+      - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
+        lineinfile:
+         dest: /etc/sysconfig/chronyd
+         regexp: "^(#)?OPTIONS"
+         line: "OPTIONS=\"-u chrony\""
+         state: present
+         create: true
+      - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
+        service:
+          name: chronyd
+          state: started
+        ignore_errors: true
+
+      - name: 2.2.2 Ensure X Window System is not installed
+        apt:
+          name: "@X Window System"
+          state: absent
+      - name: 2.2.2 Ensure X Window System is not installed
+        apt:
+          name: "x11*"
+          state: absent
+
+      - name: 2.2.3 Ensure Avahi Server is not enabled
+        service:
+         name: avahi-daemon
+         state: stopped
+         enabled: false
+
+      - name: 2.2.4 Ensure CUPS is not enabled
+        service:
+         name: cups
+         state: stopped
+         enabled: false
+    
+      - name: 2.2.5 Ensure DHCP Server is not enabled
+        service:
+         name: isc-dhcp-server
+         state: stopped
+         enabled: false
+      - name: 2.2.5 Ensure DHCP Server is not enabled (ipv6)
+        service:
+         name: isc-dhcp-server6
+         state: stopped
+         enabled: false
+
+      - name: 2.2.6 Ensure LDAP server is not enabled
+        service:
+         name: slapd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.7 Ensure NFS and RPC are not enabled
+        service:
+         name: nfs-server
+         state: stopped
+         enabled: false
+      - name: 2.2.7 Ensure NFS and RPC are not enabled (rpcbind)
+        service:
+         name: rpcbind
+         state: stopped
+         enabled: false
+
+      - name: 2.2.8 Ensure DNS Server is not enabled
+        service:
+         name: bind9
+         state: stopped
+         enabled: false
+
+      - name: 2.2.9 Ensure FTP Server is not enabled
+        service:
+         name: vsftpd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.10 Ensure HTTP server is not enabled
+        service:
+         name: apache2
+         state: stopped
+         enabled: false
+
+      - name: 2.2.11 Ensure IMAP and POP3 server is not enabled
+        service:
+         name: dovecot
+         state: stopped
+         enabled: false
+
+      - name: 2.2.12 Ensure Samba is not enabled
+        service:
+         name: smbd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.13 Ensure HTTP Proxy Server is not enabled
+        service:
+         name: squid
+         state: stopped
+         enabled: false
+
+      - name: 2.2.14 Ensure SNMP Server is not enabled
+        service:
+         name: snmpd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (checker)
+        command: dpkg -s postfix
+        register: ensure_postfix
+      - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (config)
+        lineinfile:
+         dest: /etc/postfix/main.cf
+         regexp: "^(#)?inet_interfaces"
+         line: "inet_interfaces = localhost"
+        when: ensure_postfix.rc == 0
+
+      - name: 2.2.16 Ensure rsync service is not enabled
+        service:
+         name: rsync
+         state: stopped
+         enabled: false
+
+      - name: 2.2.17 Ensure NIS Server is not enabled
+        service:
+         name: nis
+         state: stopped
+         enabled: false
+
+      - name: 2.3.1 Ensure NIS Client is not installed
+        apt:
+         name: nis
+         state: absent
+
+      - name: 2.3.2 Ensure rsh client is not installed (rsh-redone)
+        apt:
+         name: rsh-redone-client
+         state: absent
+
+      - name: 2.3.2 Ensure rsh client is not installed
+        apt:
+         name: rsh-client
+         state: absent
+
+      - name: 2.3.3 Ensure talk client is not installed
+        apt:
+         name: talk
+         state: absent
+      
+      - name: 2.3.4 Ensure telnet client is not installed
+        apt:
+         name: telnet
+         state: absent
+
+      - name: 2.3.5 Ensure LDAP client is not installed
+        apt:
+         name: ldap-utils
+         state: absent
 
 
- 
+  
+
+
+
+
+  
+
+      
+
+
+
+
+
+
+
+
+  
+      
+  
+
+
+
+
+
+
+
 
