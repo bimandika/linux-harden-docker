@@ -1,0 +1,166 @@
+- hosts: all
+  vars:
+  tasks:
+    - name: 5.1.1 Ensure cron daemon is enabled
+      service:
+       name: cron
+       enabled: true
+
+    - name: 5.1.2 Ensure permissions on /etc/crontab are configured
+      file:
+       dest: /etc/crontab
+       owner: root
+       group: root
+       mode: 0600
+    
+    - name: 5.1.3 Ensure permissions on /etc/cron.hourly are configured
+      file:
+       dest: /etc/cron.hourly
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.4 Ensure permissions on /etc/cron.daily are configured
+      file:
+       dest: /etc/cron.daily
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.5 Ensure permissions on /etc/cron.weekly are configured
+      file:
+       dest: /etc/cron.weekly
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.6 Ensure permissions on /etc/cron.monthly are configured
+      file:
+       dest: /etc/cron.monthly
+       state: directory
+       owner: root
+       group: root
+       mode: 0700 
+
+    - name: 5.1.7 Ensure permissions on /etc/cron.d are configured
+      file:
+       dest: /etc/cron.d
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.8 Ensure at/cron is restricted to authorized users
+      block:
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/at.deny
+            state: absent
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        stat:
+            path: "/etc/at.allow"
+        register: at_allow
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/at.allow
+            state: '{{ "file" if  at_allow.stat.exists else "touch" }}'
+            owner: root
+            group: root
+            mode: 0600
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/cron.deny
+            state: absent
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        stat:
+            path: "/etc/cron.allow"
+        register: cron_allow
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/cron.allow
+            state: '{{ "file" if  cron_allow.stat.exists else "touch" }}'
+            owner: root
+            group: root
+            mode: 0600
+
+      - name: 5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured
+        file:
+         dest: /etc/ssh/sshd_config
+         state: file
+         owner: root
+         group: root
+         mode: 0600
+       
+      - name: 5.2.2 Ensure SSH Protocol is set to 2
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^Protocol'
+         line: 'Protocol 2'
+      
+      - name: 5.2.3 Ensure SSH LogLevel is set to INFO
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^LogLevel'
+         line: 'LogLevel INFO'
+
+      - name: 5.2.4 Ensure SSH X11 forwarding is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^X11Forwarding'
+         line: 'X11Forwarding no'
+
+      - name: 5.2.5 Ensure SSH MaxAuthTries is set to 4 or less
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^(#)?MaxAuthTries \d'
+         line: 'MaxAuthTries 4'
+
+      - name: 5.2.6 Ensure SSH IgnoreRhosts is enabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^IgnoreRhosts'
+         line: 'IgnoreRhosts yes'
+
+      - name: 5.2.7 Ensure SSH HostbasedAuthentication is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^HostbasedAuthentication'
+         line: 'HostbasedAuthentication no'
+
+      - name: 5.2.8 Ensure SSH root login is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^PermitRootLogin'
+         line: 'PermitRootLogin no'
+      
+      - name: 5.2.9 Ensure SSH PermitEmptyPasswords is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^PermitEmptyPasswords'
+         line: 'PermitEmptyPasswords no'
+
+      - name: 5.2.10 Ensure SSH PermitUserEnvironment is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^PermitUserEnvironment'
+         line: 'PermitUserEnvironment no'
+
+         
+      
