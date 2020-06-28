@@ -1,0 +1,17 @@
+- include: file-configuration.yml
+  become: true
+
+- include: services.yml
+  become: true
+
+- include: network-configuration.yml
+  become: true
+
+- include: access-authentication-authorization.yml
+  become: true
+
+- include: logging-and-auditing.yml
+  become: true
+
+- include: system-maintenance.yml
+  become: true
