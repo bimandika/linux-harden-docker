@@ -138,10 +138,9 @@
        create: true
 
     - name: 3.4.1 Ensure TCP Wrappers is installed
-      apt:
-        name: tcpd
-        state: present
-        install_recommends: false
+      yum:
+       name: tcp_wrappers
+       state: present
 
     - name: 3.4.2 Ensure /etc/hosts.allow is configured
       template:
@@ -197,9 +196,17 @@
        line: "install tipc /bin/true"
        create: true
 
-    - name: 3.6.1 Ensure iptables is installed
-      command: /bin/true
-      changed_when: false
+    - name: 3.6.1 Ensure firewalld is installed and started
+      yum:
+       name: firewalld
+       state: present
+
+    - name: 3.6.1 Ensure firewalld is installed and started
+      yum:
+       service:
+       name: firewalld
+       state: started
+       enabled: no
       
     - name: 3.6.2 Ensure default deny firewall policy
       command: /bin/true

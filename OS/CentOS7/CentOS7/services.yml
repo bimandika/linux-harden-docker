@@ -116,32 +116,16 @@
         notify: restart xinetd
         when: time_stream_service.stat.exists
 
-    - name: 2.1.6 Ensure rsh server is not enabled
-      block:
-      - name: 2.1.6 Ensure rsh server is not enabled (rsh)
-        service:
-          name: rsh.socket
-          state: stopped
-          enabled: false
-        ignore_errors: true
-      - name: 2.1.6 Ensure rsh server is not enabled (rlogin)
-        service:
-          name: rlogin.socket
-          state: stopped
-          enabled: false
-        ignore_errors: true
-      - name: 2.1.6 Ensure rsh server is not enabled (rexec)
-        service:
-          name: rexec.socket
-          state: stopped
-          enabled: false
-        ignore_errors: true
+    - name: 2.1.6 Ensure tftp server is not enabled
+      command: chkconfig tftp off
+      notify: restart xinetd
+      ignore_errors: true
 
-    - name: 2.1.7 Ensure talk server is not enabled
+    - name: 2.1.7 Ensure xinetd is not enabled
       service:
-        name: ntalk
-        state: stopped
-        enabled: false
+       name: xinetd
+       state: stopped
+       enabled: no
       ignore_errors: true
 
     - name: 2.1.8 Ensure telnet server is not enabled
@@ -149,33 +133,6 @@
        name: telnet
        state: stopped
        enabled: false
-      ignore_errors: true
-  
-    - name: 2.1.9 Ensure tftp server is not enabled
-      block:
-      - name: 2.1.9 Ensure tftp server is not enabled (Checking)
-        stat:
-            path: /etc/xinetd.d/tftp
-        register: tftp_service
-      - name: 2.1.9 Ensure tftp server is not enabled (Stopping)
-        service:
-            name: tftp
-            state: stopped
-            enabled: no
-        notify: restart xinetd
-        when: tftp_service.stat.exists
-
-    - name: 2.1.10 Ensure xinetd is not enabled
-      service:
-       name: xinetd
-       state: stopped
-       enabled: false
-      ignore_errors: true
-
-    - name: 2.1.11 Ensure openbsd-inetd is not installed
-      apt:
-       name: openbsd-inetd
-       state: absent
       ignore_errors: true
 
     - name: 2.2.1.1 Ensure time synchronization is in use
@@ -243,14 +200,14 @@
           state: started
         ignore_errors: true
 
-      - name: 2.2.2 Ensure X Window System is not installed
-        apt:
-          name: "@X Window System"
-          state: absent
-      - name: 2.2.2 Ensure X Window System is not installed
-        apt:
-          name: "x11*"
-          state: absent
+      - name: 2.2.2 Ensure X Window System is not installed"
+        yum:
+         name: "{{ item }}"
+         state: absent
+         with_items:
+          - "@X Window System"
+          - "xorg-x11*"
+        ignore_errors: true
 
       - name: 2.2.3 Ensure Avahi Server is not enabled
         service:
@@ -266,14 +223,9 @@
     
       - name: 2.2.5 Ensure DHCP Server is not enabled
         service:
-         name: isc-dhcp-server
+         name: dhcpd
          state: stopped
-         enabled: false
-      - name: 2.2.5 Ensure DHCP Server is not enabled (ipv6)
-        service:
-         name: isc-dhcp-server6
-         state: stopped
-         enabled: false
+         enabled: no
 
       - name: 2.2.6 Ensure LDAP server is not enabled
         service:
@@ -294,7 +246,7 @@
 
       - name: 2.2.8 Ensure DNS Server is not enabled
         service:
-         name: bind9
+         name: named
          state: stopped
          enabled: false
 
@@ -306,7 +258,7 @@
 
       - name: 2.2.10 Ensure HTTP server is not enabled
         service:
-         name: apache2
+         name: httpd
          state: stopped
          enabled: false
 
@@ -335,55 +287,84 @@
          enabled: false
 
       - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (checker)
-        command: dpkg -s postfix
-        register: ensure_postfix
-      - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (config)
         lineinfile:
          dest: /etc/postfix/main.cf
          regexp: "^(#)?inet_interfaces"
-         line: "inet_interfaces = localhost"
-        when: ensure_postfix.rc == 0
+         line: "inet_interfaces = loopback-only"
+         notify: systemctl restart postfix
+        ignore_errors: true
 
-      - name: 2.2.16 Ensure rsync service is not enabled
+      - name: 2.2.16 Ensure NIS Server is not enabled
         service:
-         name: rsync
+         name: ypserv
          state: stopped
-         enabled: false
+         enabled: no
+      
+      - name: 2.2.17 Ensure rsh server is not enabled | rsh
+        service:
+         name: rsh.socket
+         state: stopped
+        enabled: no
 
-      - name: 2.2.17 Ensure NIS Server is not enabled
+      - name: 2.2.17 Ensure rsh server is not enabled | rlogin
         service:
-         name: nis
+         name: rlogin.socket
          state: stopped
-         enabled: false
+         enabled: no
+            
+      - name: 2.2.17 Ensure rsh server is not enabled | rexec
+        service:
+         name: rexec.socket
+         state: stopped
+         enabled: no
+
+      - name: 2.2.18 Ensure telnet server is not enabled
+        service:
+         name: telnet
+         state: stopped
+         enabled: no
+
+      - name: 2.2.19 Ensure tftp server is not enabled
+        service:
+         name: tftp
+         state: stopped
+         enabled: no
+
+      - name: 2.2.20 Ensure rsync service is not enabled
+        service:
+         name: rsyncd
+         state: stopped
+         enabled: no
+
+      - name: 2.2.21 Ensure talk server is not enabled
+        service:
+         name: ntalk
+         state: stopped
+         enabled: no
 
       - name: 2.3.1 Ensure NIS Client is not installed
-        apt:
+        yum:
          name: nis
-         state: absent
-
-      - name: 2.3.2 Ensure rsh client is not installed (rsh-redone)
-        apt:
-         name: rsh-redone-client
          state: absent
 
       - name: 2.3.2 Ensure rsh client is not installed
-        apt:
-         name: rsh-client
+        yum:
+         name: rsh
          state: absent
 
       - name: 2.3.3 Ensure talk client is not installed
-        apt:
+        yum:
          name: talk
          state: absent
       
       - name: 2.3.4 Ensure telnet client is not installed
-        apt:
+        yum:
          name: telnet
          state: absent
 
       - name: 2.3.5 Ensure LDAP client is not installed
-        apt:
-         name: ldap-utils
+        yum:
+         name: openldap-clients
          state: absent
 
 
