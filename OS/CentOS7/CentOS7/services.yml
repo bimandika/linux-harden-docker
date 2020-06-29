@@ -1,0 +1,416 @@
+- hosts: all
+  vars:
+  tasks:
+    - name: 2.1.1 Ensure chargen services are not enabled
+      block:
+       - name: 2.1.1 Ensure chargen services are not enabled (chargen-dgram)
+         stat:
+            path: /etc/xinetd.d/chargen-dgram
+         register: chargen_dgram_service
+       - name: 2.1.1 Ensure chargen services are not enabled (chargen-dgram patch)
+         service:
+            name: chargen-dgram
+            enabled: no
+         notify: restart xinetd
+         when: chargen_dgram_service.stat.exists
+       - name: 2.1.1 Ensure chargen services are not enabled (chargen-stream)
+         stat:
+            path: /etc/xinetd.d/chargen-stream
+         register: chargen_stream_service
+       - name: 2.1.1 Ensure chargen services are not enabled (chargen-stream patch)
+         service:
+            name: chargen-stream
+            enabled: no
+         notify: restart xinetd
+         when: chargen_stream_service.stat.exists
+
+    - name: 2.1.2 Ensure daytime services are not enabled
+      block:
+      - name: 2.1.2 Ensure daytime services are not enabled (daytime-dgram)
+        stat:
+            path: /etc/xinetd.d/daytime-dgram
+        register: daytime_dgram_service
+      - name: 2.1.2 Ensure daytime services are not enabled (daytime-dgram patch)
+        service:
+            name: daytime-dgram
+            enabled: no
+        notify: restart xinetd
+        when: daytime_dgram_service.stat.exists
+      - name: 2.1.2 Ensure daytime services are not enabled (daytime-stream)
+        stat:
+            path: /etc/xinetd.d/daytime-stream
+        register: daytime_stream_service
+      - name: 2.1.2 Ensure daytime services are not enabled (daytime-stream)
+        service:
+            name: daytime-stream
+            enabled: no
+        notify: restart xinetd
+        when: daytime_stream_service.stat.exists
+
+    - name: 2.1.3 Ensure discard services are not enabled
+      block:
+       - name: 2.1.3 Ensure discard services are not enabled (discard-dgram)
+         stat:
+            path: /etc/xinetd.d/discard-dgram
+         register: discard_dgram_service
+       - name: 2.1.3 Ensure discard services are not enabled (discard-dgram patch)
+         service:
+            name: discard-dgram
+            enabled: no
+         notify: restart xinetd
+         when: discard_dgram_service.stat.exists
+       - name: 2.1.3 Ensure discard services are not enabled (discard-stream)
+         stat:
+            path: /etc/xinetd.d/discard-stream
+         register: discard_stream_service
+       - name: 2.1.3 Ensure discard services are not enabled (discard-stream patch)
+         service:
+            name: discard-stream
+            enabled: no
+         notify: restart xinetd
+         when: discard_stream_service.stat.exists
+
+    - name: 2.1.4 Ensure echo services are not enabled
+      block:
+      - name: 2.1.4 Ensure echo services are not enabled (echo-dgram)
+        stat:
+            path: /etc/xinetd.d/echo-dgram
+        register: echo_dgram_service
+      - name: 2.1.4 Ensure echo services are not enabled (echo-dgram patch)
+        service:
+            name: echo-dgram
+            enabled: no
+        notify: restart xinetd
+        when: echo_dgram_service.stat.exists
+      - name: 2.1.4 Ensure echo services are not enabled (echo-stream)
+        stat:
+            path: /etc/xinetd.d/echo-stream
+        register: echo_stream_service
+      - name: 2.1.4 Ensure echo services are not enabled (echo-stream patch)
+        service:
+            name: echo-stream
+            enabled: no
+        notify: restart xinetd
+        when: echo_stream_service.stat.exists
+
+    - name: 2.1.5 Ensure time services are not enabled
+      block:
+      - name: 2.1.5 Ensure time services are not enabled (time-dgram)
+        stat:
+            path: /etc/xinetd.d/time-dgram
+        register: time_dgram_service
+      - name: 2.1.5 Ensure time services are not enabled (time-dgram patch)
+        service:
+            name: time-dgram
+            enabled: no
+        notify: restart xinetd
+        when: time_dgram_service.stat.exists
+      - name: 2.1.5 Ensure time services are not enabled (time-stream)
+        stat:
+            path: /etc/xinetd.d/time-stream
+        register: time_stream_service
+      - name: 2.1.5 Ensure time services are not enabled (time-stream patch)
+        service:
+            name: time-stream
+            enabled: no
+        notify: restart xinetd
+        when: time_stream_service.stat.exists
+
+    - name: 2.1.6 Ensure rsh server is not enabled
+      block:
+      - name: 2.1.6 Ensure rsh server is not enabled (rsh)
+        service:
+          name: rsh.socket
+          state: stopped
+          enabled: false
+        ignore_errors: true
+      - name: 2.1.6 Ensure rsh server is not enabled (rlogin)
+        service:
+          name: rlogin.socket
+          state: stopped
+          enabled: false
+        ignore_errors: true
+      - name: 2.1.6 Ensure rsh server is not enabled (rexec)
+        service:
+          name: rexec.socket
+          state: stopped
+          enabled: false
+        ignore_errors: true
+
+    - name: 2.1.7 Ensure talk server is not enabled
+      service:
+        name: ntalk
+        state: stopped
+        enabled: false
+      ignore_errors: true
+
+    - name: 2.1.8 Ensure telnet server is not enabled
+      service:
+       name: telnet
+       state: stopped
+       enabled: false
+      ignore_errors: true
+  
+    - name: 2.1.9 Ensure tftp server is not enabled
+      block:
+      - name: 2.1.9 Ensure tftp server is not enabled (Checking)
+        stat:
+            path: /etc/xinetd.d/tftp
+        register: tftp_service
+      - name: 2.1.9 Ensure tftp server is not enabled (Stopping)
+        service:
+            name: tftp
+            state: stopped
+            enabled: no
+        notify: restart xinetd
+        when: tftp_service.stat.exists
+
+    - name: 2.1.10 Ensure xinetd is not enabled
+      service:
+       name: xinetd
+       state: stopped
+       enabled: false
+      ignore_errors: true
+
+    - name: 2.1.11 Ensure openbsd-inetd is not installed
+      apt:
+       name: openbsd-inetd
+       state: absent
+      ignore_errors: true
+
+    - name: 2.2.1.1 Ensure time synchronization is in use
+      block:
+      - name: 2.2.1.1 Ensure time synchronization is in use (service install)
+        apt:
+            name: ntp
+            state: present
+            install_recommends: false
+      - name: 2.2.1.1 Ensure time synchronization is in use (service start)
+        service:
+            name: ntp
+            state: started
+            enabled: true
+      - name: 2.2.1.1 Ensure time synchronization is in use (service stop ntp)
+        service:
+            name: ntp
+            state: stopped
+            enabled: false
+      - name: 2.2.1.1 Ensure time synchronization is in use (service install)
+        apt:
+          name: chrony
+          state: present
+          install_recommends: false
+      - name: 2.2.1.1 Ensure time synchronization is in use (service stop chrony)
+        service:
+            name: chronyd
+            state: stopped
+            enabled: false
+        ignore_errors: true
+
+    - name: 2.2.1.2 Ensure ntp is configured
+      block:
+      - name: 2.2.1.2 Ensure ntp is configured modify /etc/ntp.conf
+        template:
+            src: files/ntp.conf.j2
+            dest: /etc/ntp.conf
+            owner: root
+            group: root
+            mode: 0644
+      - name: 2.2.1.2 Ensure ntp is configured modify /etc/init.d/ntp
+        lineinfile:
+            dest: /etc/init.d/ntp
+            regexp: "^RUNASUSER"
+            line: "RUNASUSER=ntp"
+        ignore_errors: true
+
+      - name: 2.2.1.3 Ensure chrony is configured
+        template:
+         src: files/chrony.conf.j2
+         dest: /etc/chrony/chrony.conf
+         owner: root
+         group: root
+         mode: 0644
+      - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
+        lineinfile:
+         dest: /etc/sysconfig/chronyd
+         regexp: "^(#)?OPTIONS"
+         line: "OPTIONS=\"-u chrony\""
+         state: present
+         create: true
+      - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
+        service:
+          name: chronyd
+          state: started
+        ignore_errors: true
+
+      - name: 2.2.2 Ensure X Window System is not installed
+        apt:
+          name: "@X Window System"
+          state: absent
+      - name: 2.2.2 Ensure X Window System is not installed
+        apt:
+          name: "x11*"
+          state: absent
+
+      - name: 2.2.3 Ensure Avahi Server is not enabled
+        service:
+         name: avahi-daemon
+         state: stopped
+         enabled: false
+
+      - name: 2.2.4 Ensure CUPS is not enabled
+        service:
+         name: cups
+         state: stopped
+         enabled: false
+    
+      - name: 2.2.5 Ensure DHCP Server is not enabled
+        service:
+         name: isc-dhcp-server
+         state: stopped
+         enabled: false
+      - name: 2.2.5 Ensure DHCP Server is not enabled (ipv6)
+        service:
+         name: isc-dhcp-server6
+         state: stopped
+         enabled: false
+
+      - name: 2.2.6 Ensure LDAP server is not enabled
+        service:
+         name: slapd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.7 Ensure NFS and RPC are not enabled
+        service:
+         name: nfs-server
+         state: stopped
+         enabled: false
+      - name: 2.2.7 Ensure NFS and RPC are not enabled (rpcbind)
+        service:
+         name: rpcbind
+         state: stopped
+         enabled: false
+
+      - name: 2.2.8 Ensure DNS Server is not enabled
+        service:
+         name: bind9
+         state: stopped
+         enabled: false
+
+      - name: 2.2.9 Ensure FTP Server is not enabled
+        service:
+         name: vsftpd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.10 Ensure HTTP server is not enabled
+        service:
+         name: apache2
+         state: stopped
+         enabled: false
+
+      - name: 2.2.11 Ensure IMAP and POP3 server is not enabled
+        service:
+         name: dovecot
+         state: stopped
+         enabled: false
+
+      - name: 2.2.12 Ensure Samba is not enabled
+        service:
+         name: smbd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.13 Ensure HTTP Proxy Server is not enabled
+        service:
+         name: squid
+         state: stopped
+         enabled: false
+
+      - name: 2.2.14 Ensure SNMP Server is not enabled
+        service:
+         name: snmpd
+         state: stopped
+         enabled: false
+
+      - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (checker)
+        command: dpkg -s postfix
+        register: ensure_postfix
+      - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (config)
+        lineinfile:
+         dest: /etc/postfix/main.cf
+         regexp: "^(#)?inet_interfaces"
+         line: "inet_interfaces = localhost"
+        when: ensure_postfix.rc == 0
+
+      - name: 2.2.16 Ensure rsync service is not enabled
+        service:
+         name: rsync
+         state: stopped
+         enabled: false
+
+      - name: 2.2.17 Ensure NIS Server is not enabled
+        service:
+         name: nis
+         state: stopped
+         enabled: false
+
+      - name: 2.3.1 Ensure NIS Client is not installed
+        apt:
+         name: nis
+         state: absent
+
+      - name: 2.3.2 Ensure rsh client is not installed (rsh-redone)
+        apt:
+         name: rsh-redone-client
+         state: absent
+
+      - name: 2.3.2 Ensure rsh client is not installed
+        apt:
+         name: rsh-client
+         state: absent
+
+      - name: 2.3.3 Ensure talk client is not installed
+        apt:
+         name: talk
+         state: absent
+      
+      - name: 2.3.4 Ensure telnet client is not installed
+        apt:
+         name: telnet
+         state: absent
+
+      - name: 2.3.5 Ensure LDAP client is not installed
+        apt:
+         name: ldap-utils
+         state: absent
+
+
+  
+
+
+
+
+  
+
+      
+
+
+
+
+
+
+
+
+  
+      
+  
+
+
+
+
+
+
+
+

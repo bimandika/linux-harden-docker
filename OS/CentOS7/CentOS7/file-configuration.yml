@@ -1,0 +1,401 @@
+- hosts: all
+  vars:
+  tasks:
+    - name: 1.1.1.1 Ensure mounting of cramfs filesystems is disabled
+      lineinfile:
+        dest: /etc/modprobe.d/CIS.conf
+        regexp: "^(#)?install cramfs(\\s|$)"
+        line: "install cramfs /bin/true"
+        create: yes
+
+    - name: 1.1.1.1 Ensure mounting of cramfs filesystems is disabled (remove cramfs module)
+      modprobe:
+       name: cramfs
+       state: absent
+
+    - name: 1.1.1.2 Ensure mounting of freevxfs filesystems is disabled
+      lineinfile:
+       dest: /etc/modprobe.d/CIS.conf
+       regexp: "^(#)?install freevxfs(\\s|$)"
+       line: "install freevxfs /bin/true"
+       create: yes
+
+    - name: 1.1.1.2 Ensure mounting of freevxfs filesystems is disabled (remove freevxfs module)
+      modprobe:
+       name: freevxfs
+       state: absent
+    
+    - name: 1.1.1.3 Ensure mounting of jffs2 filesystems is disabled
+      lineinfile:
+       dest: /etc/modprobe.d/CIS.conf
+       regexp: "^(#)?install jffs2(\\s|$)"
+       line: "install jffs2 /bin/true"
+       create: yes
+
+    - name: 1.1.1.3 Ensure mounting of jffs2 filesystems is disabled (remove jffs2 module)
+      modprobe:
+       name: jffs2
+       state: absent
+
+    - name: 1.1.1.4 Ensure mounting of hfs filesystems is disabled
+      lineinfile:
+       dest: /etc/modprobe.d/CIS.conf
+       regexp: "^(#)?install hfs(\\s|$)"
+       line: "install hfs /bin/true"
+       create: yes
+
+    - name: 1.1.1.4 Ensure mounting of hfs filesystems is disabled (remove hfs module)
+      modprobe:
+       name: hfs
+       state: absent
+
+    - name: 1.1.1.5 Ensure mounting of hfsplus filesystems is disabled 
+      lineinfile:
+       dest: /etc/modprobe.d/CIS.conf
+       regexp: "^(#)?install hfsplus(\\s|$)"
+       line: "install hfsplus /bin/true"
+       create: yes
+
+    - name: 1.1.1.5 Ensure mounting of hfsplus filesystems is disabled  (remove hfsplus module)
+      modprobe:
+       name: hfs
+       state: absent
+
+    - name: 1.1.1.6 Ensure mounting of squashfs filesystems is disabled
+      lineinfile:
+       dest: /etc/modprobe.d/CIS.conf
+       regexp: "^(#)?install squashfs(\\s|$)"
+       line: "install squashfs /bin/true"
+       create: yes
+
+    - name: 1.1.1.6 Ensure mounting of squashfs filesystems is disabled  (remove squashfs module)
+      modprobe:
+       name: squashfs
+       state: absent
+
+    - name: 1.1.1.7 Ensure mounting of udf filesystems is disabled
+      lineinfile:
+       dest: /etc/modprobe.d/CIS.conf
+       regexp: "^(#)?install udf(\\s|$)"
+       line: "install udf /bin/true"
+       create: yes
+
+    - name: 1.1.1.7 Ensure mounting of udf filesystems is disabled  (remove udf module)
+      modprobe:
+       name: udf
+       state: absent
+
+    - name: 1.1.1.8 Ensure mounting of FAT filesystems is disabled
+      lineinfile:
+       dest: /etc/modprobe.d/CIS.conf
+       regexp: "^(#)?install vfat(\\s|$)"
+       line: "install vfat /bin/true"
+       create: yes
+
+    - name: 1.1.1.8 Ensure mounting of FAT filesystems is disabled  (remove FAT module)
+      modprobe:
+       name: vfat
+       state: absent
+
+
+    - name: 1.1.2 Ensure separate partition exists for /tmp
+      command: findmnt --fstab '/tmp'
+      register: fileconfig_112
+      ignore_errors: true
+
+    - name: "1.1.3 Ensure nodev option set on /tmp partition\n
+             1.1.4 Ensure nosuid option set on /tmp partition\n"
+      command: mount -o remount,nodev,nosuid,noexec /tmp
+      when: fileconfig_112.rc == 0
+      ignore_errors: true
+
+    - name: 1.1.5 Ensure separate partition exists for /var
+      command: findmnt --fstab '/var'
+      ignore_errors: true
+
+    - name: 1.1.6 Ensure separate partition exists for /var/tmp
+      command: findmnt --fstab '/var/tmp'
+      register: fileconfig_116
+      ignore_errors: true
+
+    - name: "1.1.7 Ensure nodev option set on /var/tmp partition\n
+             1.1.8 Ensure nosuid option set on /var/tmp partition\n
+             1.1.9 Ensure noexec option set on /var/tmp partition\n"
+      command: mount -o remount,nodev,nosuid,noexec /var/tmp
+      when: fileconfig_116.rc == 0
+      ignore_errors: true
+
+    - name: 1.1.10 Ensure separate partition exists for /var/log
+      command: findmnt --fstab '/var/log'
+      ignore_errors: true
+
+    - name: 1.1.11 Ensure separate partition exists for /var/log/audit
+      command: findmnt --fstab '/var/log/audit'
+      ignore_errors: true
+
+    - name: 1.1.12 Ensure separate partition exists for /home
+      command: findmnt --fstab '/home'
+      ignore_errors: true
+
+    - name: 1.1.13 Ensure nodev option set on /home partition
+      command: mount -o remount,nodev /home
+      ignore_errors: true
+
+    - name: "1.1.14 Ensure nodev option set on /dev/shm partition\n
+             1.1.15 Ensure nosuid option set on /dev/shm partition\n
+             1.1.16 Ensure noexec option set on /dev/shm partition"
+      command: mount -o remount,nodev,nosuid,noexec /dev/shm
+      ignore_errors: true
+
+    - name: 1.1.17 Ensure nodev option set on removable media partitions
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.1.18 Ensure nosuid option set on removable media partitions
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.1.19 Ensure noexec option set on removable media partitions
+      command: /bin/true
+      changed_when: false
+  
+    - name: 1.1.20 Ensure sticky bit is set on all world-writable directories
+      shell: set -o pipefail && df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+      args:
+       warn: false
+       executable: /bin/bash
+      changed_when: no
+      failed_when: no
+
+    - name: 1.1.21 Disable Automounting
+      systemd: 
+         name: autofs
+         enabled: no
+      ignore_errors: true
+
+    - name: 1.2.1 Ensure package manager repositories are configured
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.2.2 Ensure gpgcheck is globally activated
+      replace:
+        name: /etc/yum.conf
+        regexp: "^gpgcheck=0"
+        replace: "gpgcheck=1"
+      ignore_errors: true
+
+    - name: 1.2.2 Ensure gpgcheck is globally activated
+      find:
+        paths: /etc/yum.repos.d
+        patterns: "*.repo"
+        register: yum_repos
+        changed_when: no
+
+    - name: 1.2.2 Ensure gpgcheck is globally activated
+      replace:
+       name: "{{ item.path }}"
+       regexp: "^gpgcheck=0"
+       replace: "gpgcheck=1"
+       with_items:
+         - "{{ yum_repos.files }}"
+
+    - name: 1.2.3 Ensure GPG keys are configured
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.3.1 Ensure AIDE is installed
+      yum:
+        name: aide
+        state: present
+      register: harden_131
+      ignore_errors: true
+
+    - name: 1.3.1 Ensure AIDE is installed (patch)
+      command: /usr/sbin/aide --init -B 'database_out=file:/var/lib/aide/aide.db.gz'
+      args:
+       creates: /var/lib/aide/aide.db.gz
+       async: 45
+       poll: 0
+      ignore_errors: true
+
+    - name: 1.3.2 Ensure filesystem integrity is regularly checked
+      cron:
+       name: Run AIDE integrity check weekly
+       user: root
+       minute: "0"
+       hour: "5"
+       day: "*"
+       month: "*"
+       weekday: "*"
+       job: /usr/bin/aide.wrapper --config /etc/aide/aide.conf --check
+      when: harden_131.rc == 0
+
+    - name: 1.4.1 Ensure permissions on bootloader config are configured
+      stat:
+       path: /etc/grub2.cfg
+       register: grub_cfg
+
+    - name: 1.4.1 Ensure permissions on bootloader config are configured (Patch)
+      file:
+        path: "{{ grub_cfg.stat.lnk_source }}"
+        owner: root
+        group: root
+        mode: 0600
+    
+    - name: 1.4.2 Ensure bootloader password is set
+      command: /bin/true
+      changed_when: false
+    
+    - name: 1.4.3 Ensure authentication required for single user mode
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.5.1 Ensure core dumps are restricted
+      lineinfile:
+       state: present
+       dest: /etc/security/limits.conf
+       regexp: '^#?\\*.*core'
+       line: '*                hard    core            0'
+       insertbefore: '^# End of file'
+
+    - name: 1.5.1 Ensure core dumps are restricted (Patch)
+      sysctl:
+       name: fs.suid_dumpable
+       value: "0"
+       state: present
+       reload: true
+       sysctl_set: true
+      ignore_errors: true
+
+    - name: 1.5.2 Ensure XD/NX support is enabled
+      shell: |
+             set -o pipefail;
+             dmesg | grep -E "NX|XD" | grep " active"
+      args:
+       executable: /bin/bash
+      changed_when: false
+
+    - name: 1.5.3 Ensure address space layout randomization (ASLR) is enabled
+      sysctl:
+       name: kernel.randomize_va_space
+       value: "2"
+       state: present
+       reload: true
+       sysctl_set: true
+      ignore_errors: true
+
+    - name: 1.5.4 Ensure prelink is disabled
+      apt:
+        name: prelink
+        state: absent
+
+    - name: 1.6.1.1 Ensure SELinux is not disabled in bootloader configuration
+      replace:
+        dest: /etc/default/grub
+        regexp: '(selinux|enforcing)\s*=\s*0\s*'
+        follow: true
+      register: selinux_grub_patch
+      ignore_errors: true
+      notify: generate new grub config
+
+    - name: 1.6.1.2 Ensure the SELinux state is enforcing
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.6.1.3 Ensure SELinux policy is configured
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.6.1.4 Ensure SETroubleshoot is not installed
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.6.1.5 Ensure the MCS Translation Service (mcstrans) is not installed
+      yum:
+       name: mcstrans
+       state: absent
+
+    - name: 1.6.2 Ensure SELinux is installed
+      yum:
+       name: libselinux
+       state: present
+
+
+
+    - name: 1.7.1.1 Ensure message of the day is configured properly
+      template:
+       src: files/motd.j2
+       dest: /etc/motd 
+
+    - name: 1.7.1.2 Ensure local login warning banner is configured properly
+      template:
+       src: files/warning.j2
+       dest: /etc/issue
+
+    - name: 1.7.1.3 Ensure remote login warning banner is configured properly
+      template:
+       src: files/warning.j2
+       dest: /etc/issue.net
+  
+    - name: 1.7.1.4 Ensure permissions on /etc/motd are configured
+      file:
+       dest: /etc/motd
+       state: file
+       owner: root
+       group: root
+       mode: 0644
+  
+    - name: 1.7.1.5 Ensure permissions on /etc/issue are configured
+      file:
+       dest: /etc/issue
+       state: file
+       owner: root
+       group: root
+       mode: 0644
+
+    - name: 1.7.1.6 Ensure permissions on /etc/issue.net are configured
+      file:
+       dest: /etc/issue.net
+       state: file
+       owner: root
+       group: root
+       mode: 0644
+
+    - name: 1.7.2 Ensure GDM login banner is configured (GUI Detection)
+      command: /bin/true
+      changed_when: false
+
+    - name: 1.8 Ensure updates, patches, and additional security software are installed
+      yum:
+       name: "*"
+       state: latest
+
+      
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+    
+
+    
+  
+
+    
+    
+    
+    
+
+    
+  

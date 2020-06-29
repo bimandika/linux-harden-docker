@@ -1,0 +1,359 @@
+- hosts: all
+  vars:
+  tasks:
+    - name: 5.1.1 Ensure cron daemon is enabled
+      service:
+       name: cron
+       enabled: true
+
+    - name: 5.1.2 Ensure permissions on /etc/crontab are configured
+      file:
+       dest: /etc/crontab
+       owner: root
+       group: root
+       mode: 0600
+    
+    - name: 5.1.3 Ensure permissions on /etc/cron.hourly are configured
+      file:
+       dest: /etc/cron.hourly
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.4 Ensure permissions on /etc/cron.daily are configured
+      file:
+       dest: /etc/cron.daily
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.5 Ensure permissions on /etc/cron.weekly are configured
+      file:
+       dest: /etc/cron.weekly
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.6 Ensure permissions on /etc/cron.monthly are configured
+      file:
+       dest: /etc/cron.monthly
+       state: directory
+       owner: root
+       group: root
+       mode: 0700 
+
+    - name: 5.1.7 Ensure permissions on /etc/cron.d are configured
+      file:
+       dest: /etc/cron.d
+       state: directory
+       owner: root
+       group: root
+       mode: 0700
+
+    - name: 5.1.8 Ensure at/cron is restricted to authorized users
+      block:
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/at.deny
+            state: absent
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        stat:
+            path: "/etc/at.allow"
+        register: at_allow
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/at.allow
+            state: '{{ "file" if  at_allow.stat.exists else "touch" }}'
+            owner: root
+            group: root
+            mode: 0600
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/cron.deny
+            state: absent
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        stat:
+            path: "/etc/cron.allow"
+        register: cron_allow
+
+      - name: 5.1.8 Ensure at/cron is restricted to authorized users
+        file:
+            dest: /etc/cron.allow
+            state: '{{ "file" if  cron_allow.stat.exists else "touch" }}'
+            owner: root
+            group: root
+            mode: 0600
+
+      - name: 5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured
+        file:
+         dest: /etc/ssh/sshd_config
+         state: file
+         owner: root
+         group: root
+         mode: 0600
+       
+      - name: 5.2.2 Ensure SSH Protocol is set to 2
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^Protocol'
+         line: 'Protocol 2'
+      
+      - name: 5.2.3 Ensure SSH LogLevel is set to INFO
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^LogLevel'
+         line: 'LogLevel INFO'
+
+      - name: 5.2.4 Ensure SSH X11 forwarding is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^X11Forwarding'
+         line: 'X11Forwarding no'
+
+      - name: 5.2.5 Ensure SSH MaxAuthTries is set to 4 or less
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^(#)?MaxAuthTries \d'
+         line: 'MaxAuthTries 4'
+
+      - name: 5.2.6 Ensure SSH IgnoreRhosts is enabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^IgnoreRhosts'
+         line: 'IgnoreRhosts yes'
+
+      - name: 5.2.7 Ensure SSH HostbasedAuthentication is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^HostbasedAuthentication'
+         line: 'HostbasedAuthentication no'
+
+      - name: 5.2.8 Ensure SSH root login is disabled
+        command: /bin/true
+        changed_when: false
+      
+      - name: 5.2.9 Ensure SSH PermitEmptyPasswords is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^PermitEmptyPasswords'
+         line: 'PermitEmptyPasswords no'
+
+      - name: 5.2.10 Ensure SSH PermitUserEnvironment is disabled
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^PermitUserEnvironment'
+         line: 'PermitUserEnvironment no'
+
+      - name: 5.2.11 Ensure only approved MAC algorithms are used
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^MACs'
+         line: 'MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com'
+
+      - name: 5.2.12 Ensure SSH Idle Timeout Interval is configured
+        block:
+        - name: 5.2.12 Ensure SSH Idle Timeout Interval is configured
+          lineinfile:
+            state: present
+            dest: /etc/ssh/sshd_config
+            regexp: '^ClientAliveInterval'
+            line: "ClientAliveInterval 300"
+        - name: 5.2.12 Ensure SSH Idle Timeout Interval is configured
+          lineinfile:
+            state: present
+            dest: /etc/ssh/sshd_config
+            regexp: '^ClientAliveCountMax'
+            line: "ClientAliveCountMax 3"
+
+      - name: 5.2.13 Ensure SSH LoginGraceTime is set to one minute or less
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^LoginGraceTime'
+         line: "LoginGraceTime 60"
+      
+      - name: 5.2.14 Ensure SSH access is limited
+        command: /bin/true
+        changed_when: false
+
+      - name: 5.2.15 Ensure SSH warning banner is configured
+        lineinfile:
+         state: present
+         dest: /etc/ssh/sshd_config
+         regexp: '^Banner'
+         line: 'Banner /etc/issue.net'
+
+      - name: 5.3.1 Ensure password creation requirements are configured
+        block:
+        - name: 5.3.1 Ensure password creation requirements are configured
+          apt:
+            name: libpam-pwquality
+            state: present
+            install_recommends: false
+
+        - name: 5.3.1 Ensure password creation requirements are configured
+          lineinfile:
+            state: present
+            dest: /etc/security/pwquality.conf
+            regexp: '^{{ item.key }}'
+            line: '{{ item.key }} = {{ item.value }}'
+          with_items:
+             - key: 'minlen'
+               value: '14'
+             - key: 'dcredit'
+               value: '-1'
+             - key: 'ucredit'
+               value: '-1'
+             - key: 'ocredit'
+               value: '-1'
+             - key: 'lcredit'
+               value: '-1'
+
+        - name: 5.3.2 Ensure lockout for failed password attempts is configured
+          lineinfile:
+            dest: /etc/pam.d/common-auth
+            line: 'auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900'
+
+        - name: 5.3.3 Ensure password reuse is limited
+          lineinfile:
+           dest: /etc/pam.d/common-password
+           line: 'password required pam_pwhistory.so remember=5'
+
+        - name: 5.3.4 Ensure password hashing algorithm is SHA-512
+          command: authconfig --passalgo=sha512 --update
+          changed_when: false
+          failed_when: false
+
+        - name: 5.4.1.1 Ensure password expiration is 365 days or less
+          lineinfile:
+            state: present
+            dest: /etc/login.defs
+            regexp: '^PASS_MAX_DAYS'
+            line: "PASS_MAX_DAYS 365"
+
+        - name: 5.4.1.2 Ensure minimum days between password changes is 7 or more
+          lineinfile:
+            state: present
+            dest: /etc/login.defs
+            regexp: '^PASS_MIN_DAYS'
+            line: "PASS_MIN_DAYS 7"
+
+        - name: 5.4.1.3 Ensure password expiration warning days is 7 or more
+          lineinfile:
+            state: present
+            dest: /etc/login.defs
+            regexp: '^PASS_WARN_AGE'
+            line: "PASS_WARN_AGE 7"
+        
+        - name: 5.4.1.4 Ensure inactive password lock is 30 days or less
+          lineinfile:
+             state: present
+             dest: /etc/default/useradd
+             regexp: '^INACTIVE'
+             line: "INACTIVE=30"
+        
+        - name: 5.4.1.5 Ensure all users last password change date is in the past
+          command: /bin/true
+          changed_when: false
+
+        - name: 5.4.2 Ensure system accounts are non-login
+          command: >
+             for user in `awk -F: '($3 < 1000) {print $1 }' /etc/passwd`; do
+              if [ $user != "root" ]; then
+               usermod -L $user
+               if [ $user != "sync" ] && [ $user != "shutdown" ] && [ $user != "halt" ];
+               then
+                usermod -s /usr/sbin/nologin $user
+               fi
+              fi
+             done
+          changed_when: false
+
+        - name: 5.4.3 Ensure default group for the root account is GID 0
+          command: usermod -g 0 root
+          changed_when: false
+          failed_when: false
+
+        - name: 5.4.4 Ensure default user umask is 027 or more restrictive
+          block:
+           - name: 5.4.4 Ensure default user umask is 027 or more restrictive (bashrc)
+             lineinfile:
+              state: present
+              dest: /etc/bash.bashrc
+              create: true
+              regexp: '^umask '
+              line: 'umask 027'
+
+           - name: 5.4.4 Ensure default user umask is 027 or more restrictive (/etc/profile)
+             lineinfile:
+              state: present
+              dest: /etc/profile
+              create: true
+              regexp: '^umask '
+              line: 'umask 027'
+
+           - name: 5.4.4 Ensure default user umask is 027 or more restrictive (/etc/profile.d/99-umask.sh)
+             lineinfile:
+               state: present
+               dest: /etc/profile.d/99-umask.sh
+               create: true
+               regexp: '^umask '
+               line: 'umask 027'
+
+        - name: 5.4.5 Ensure default user shell timeout is 900 seconds or less
+          block:
+           - name: 5.4.5 Ensure default user shell timeout is 900 seconds or less (/etc/bash.bashrc)
+             lineinfile:
+              state: present
+              dest: /etc/bash.bashrc
+              create: true
+              regexp: '^TMOUT='
+              line: "TMOUT=900"
+
+           - name: 5.4.5 Ensure default user shell timeout is 900 seconds or less (/etc/profile)
+             lineinfile:
+               state: present
+               dest: /etc/profile
+               create: true
+               regexp: '^TMOUT='
+               line: "TMOUT=900"
+
+           - name: 5.4.5 Ensure default user shell timeout is 900 seconds or less (/etc/profile.d/99-tmout.sh)
+             lineinfile:
+                state: present
+                dest: /etc/profile.d/99-tmout.sh
+                create: true
+                regexp: '^TMOUT='
+                line: "TMOUT=900"
+
+        - name: 5.5 Ensure root login is restricted to system console
+          command: /bin/true
+          changed_when: false
+        
+        - name: 5.6 Ensure access to the su command is restricted
+          lineinfile:
+            state: present
+            dest: /etc/pam.d/su
+            regexp: '^(#)?auth\s+required\s+pam_wheel\.so'
+            line: "auth           required        pam_wheel.so use_uid"
+        - name: 5.6 Ensure access to the su command is restricted (sudo group contains root)
+          user:
+           name: root
+           groups: sudo
+        
