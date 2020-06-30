@@ -1,0 +1,245 @@
+- hosts: all
+  vars:
+  tasks:
+
+    - name: 4.1 Configure System Accounting
+      apt:
+       name: auditd
+       state: present
+
+    - name: 4.1.1.1 Ensure audit log storage size is configured
+      lineinfile:
+       dest: /etc/audit/auditd.conf
+       regexp: "^max_log_file( |=)"
+       line: "max_log_file = 10"
+       state: present
+    
+    - name: 4.1.1.2 Ensure system is disabled when audit logs are full
+      lineinfile:
+       dest: /etc/audit/auditd.conf
+       regexp: "^admin_space_left_action"
+       line: "admin_space_left_action = halt"
+       state: present
+    - name: 4.1.1.2 Ensure system is disabled when audit logs are full (email action)
+      lineinfile:
+       dest: /etc/audit/auditd.conf
+       regexp: "^space_left_action"
+       line: "space_left_action = email"
+       state: present
+    
+    - name: 4.1.1.3 Ensure audit logs are not automatically deleted
+      lineinfile:
+       dest: /etc/audit/auditd.conf
+       regexp: "^max_log_file_action"
+       line: "max_log_file_action = keep_logs"
+       state: present
+
+    - name: 4.1.2 Ensure auditd service is enabled
+      service:
+       name: auditd
+       state: started
+       enabled: true
+
+    - name: 4.1.3 Ensure auditing for processes that start prior to auditd is enabled
+      replace:
+       dest: /etc/default/grub
+       regexp: '(^GRUB_CMDLINE_LINUX\s*\=\s*)(?:")(.+)(?<!audit=1)(?:")'
+       replace: '\1"\2 audit=1"'
+       follow: true
+      ignore_errors: true
+
+    - name: 4.1.4 Ensure events that modify date and time information are collected
+      template:
+       src: files/audit/rules_4_1_4.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_4.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.5 Ensure events that modify user/group information are collected
+      template:
+       src: files/audit/rules_4_1_5.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_5.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.6 Ensure events that modify the system's network environment are collected
+      template:
+       src: files/audit/rules_4_1_6.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_6.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.7 Ensure events that modify the system's Mandatory Access Controls are collected
+      template:
+       src: files/audit/rules_4_1_7.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_7.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.8 Ensure login and logout events are collected
+      template:
+       src: files/audit/rules_4_1_8.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_8.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.9 Ensure session initiation information is collected
+      template:
+       src: files/audit/rules_4_1_9.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_9.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.10 Ensure discretionary access control permission modification events are collected
+      template:
+       src: files/audit/rules_4_1_10.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_10.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.11 Ensure unsuccessful unauthorized file access attempts are collected
+      template:
+       src: files/audit/rules_4_1_11.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_11.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.12 Ensure use of privileged commands is collected
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.1.13 Ensure successful file system mounts are collected
+      template:
+       src: files/audit/rules_4_1_13.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_13.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.14 Ensure file deletion events by users are collected
+      template:
+       src: files/audit/rules_4_1_14.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_14.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.15 Ensure changes to system administration scope (sudoers) is collected
+      template:
+       src: files/audit/rules_4_1_15.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_15.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.16 Ensure system administrator actions (sudolog) are collected
+      template:
+       src: files/audit/rules_4_1_16.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_16.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.17 Ensure kernel module loading and unloading is collected
+      template:
+       src: files/audit/rules_4_1_16.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_16.rules
+       owner: root
+       group: root
+       mode: 0600
+
+    - name: 4.1.18 Ensure the audit configuration is immutable
+      template:
+       src: files/audit/rules_4_1_18.rules.j2
+       dest: /etc/audit/rules.d/rules_4_1_18.rules
+       owner: root
+       group: root
+       mode: 0600
+    
+    - name: 4.2.1.1 Ensure rsyslog Service is enabled
+      service:
+       name: rsyslog
+       enabled: yes
+      changed_when: false
+
+    - name: 4.2.1.2 Ensure logging is configured
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.2.1.3 Ensure rsyslog default file permissions configured
+      lineinfile:
+       dest: /etc/rsyslog.conf
+       regexp: '^\$FileCreateMode'
+       line: '$FileCreateMode 0640'
+
+    - name: 4.2.1.4 Ensure rsyslog is configured to send logs to a remote log host
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.2.1.5 Ensure remote rsyslog messages are only accepted on designated log hosts.
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.2.2.1 Ensure syslog-ng service is enabled
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.2.2.2 Ensure logging is configured
+      command: find /var/log -type f -exec chmod g-wx,o-rwx {} +
+      changed_when: false
+      failed_when: false
+
+    - name: 4.2.2.3 Ensure syslog-ng default file permissions configured
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.2.2.4 Ensure syslog-ng is configured to send logs to a remote log host
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.2.2.5 Ensure remote syslog-ng messages are only accepted on designated log hosts
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.2.3 Ensure rsyslog or syslog-ng is installed
+      command: /bin/true
+      changed_when: false
+  
+    - name: 4.2.4 Ensure permissions on all logfiles are configured
+      command: /bin/true
+      changed_when: false
+
+    - name: 4.3 Ensure logrotate is configured
+      block:
+       - name: 4.3 Ensure logrotate is configured
+         find:
+            paths: /etc/logrotate.d/
+         register: log_rotates
+
+       - name: 4.3 Ensure logrotate is configured
+         file:
+            path: /etc/logrotate.conf
+            state: touch
+         changed_when: false
+
+       - name: 4.3 Ensure logrotate is configured
+         replace:
+            path: "{{ item.path }}"
+            regexp: '^(\s*)(daily|weekly|monthly|yearly)$'
+            replace: "\\1 daily"
+         with_items:
+            - "{{ log_rotates.files }}"
+            - { path: "/etc/logrotate.conf" }
+
+
+
+  
+

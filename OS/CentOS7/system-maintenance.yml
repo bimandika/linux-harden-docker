@@ -177,9 +177,7 @@
       command: /bin/true
       changed_when: false
 
-    - name: 6.2.20 Ensure shadow group is empty
-      command: /bin/true
-      changed_when: false
+
 
     
      
