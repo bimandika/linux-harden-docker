@@ -260,42 +260,49 @@
          name: named
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.9 Ensure FTP Server is not enabled
         service:
          name: vsftpd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.10 Ensure HTTP server is not enabled
         service:
          name: httpd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.11 Ensure IMAP and POP3 server is not enabled
         service:
          name: dovecot
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.12 Ensure Samba is not enabled
         service:
          name: smbd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.13 Ensure HTTP Proxy Server is not enabled
         service:
          name: squid
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.14 Ensure SNMP Server is not enabled
         service:
          name: snmpd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (checker)
         lineinfile:
@@ -310,6 +317,7 @@
          name: ypserv
          state: stopped
          enabled: no
+        ignore_errors: true
       
       - name: 2.2.17 Ensure rsh server is not enabled | rsh
         service:
@@ -351,6 +359,7 @@
          name: rsyncd
          state: stopped
          enabled: no
+        ignore_errors: true
 
       - name: 2.2.21 Ensure talk server is not enabled
         service:
