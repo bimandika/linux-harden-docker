@@ -225,18 +225,21 @@
          name: cups
          state: stopped
          enabled: false
+        ignore_errors: true
     
       - name: 2.2.5 Ensure DHCP Server is not enabled
         service:
          name: dhcpd
          state: stopped
          enabled: no
+        ignore_errors: true
 
       - name: 2.2.6 Ensure LDAP server is not enabled
         service:
          name: slapd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.7 Ensure NFS and RPC are not enabled
         service:
