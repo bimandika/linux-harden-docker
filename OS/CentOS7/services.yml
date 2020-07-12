@@ -147,16 +147,19 @@
             name: ntp
             state: started
             enabled: true
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service stop ntp)
         service:
             name: ntp
             state: stopped
             enabled: false
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service install)
         yum:
           name: chrony
           state: present
           install_recommends: false
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service stop chrony)
         service:
             name: chronyd
@@ -187,6 +190,7 @@
          owner: root
          group: root
          mode: 0644
+        ignore_errors: true
       - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
         lineinfile:
          dest: /etc/sysconfig/chronyd
@@ -194,6 +198,7 @@
          line: "OPTIONS=\"-u chrony\""
          state: present
          create: true
+        ignore_errors: true
       - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
         service:
           name: chronyd
