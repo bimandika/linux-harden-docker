@@ -307,7 +307,7 @@
         service:
          name: rsh.socket
          state: stopped
-        enabled: no
+         enabled: no
         ignore_errors: true
 
       - name: 2.2.17 Ensure rsh server is not enabled | rlogin
