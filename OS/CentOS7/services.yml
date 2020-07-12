@@ -238,11 +238,14 @@
          name: nfs-server
          state: stopped
          enabled: false
+        ignore_errors: true
+
       - name: 2.2.7 Ensure NFS and RPC are not enabled (rpcbind)
         service:
          name: rpcbind
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.8 Ensure DNS Server is not enabled
         service:
