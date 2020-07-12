@@ -207,16 +207,20 @@
         lineinfile:
           dest: /etc/pam.d/common-auth
           line: 'auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900'
+        ignore_errors: true
+        
 
       - name: 5.3.3 Ensure password reuse is limited
         lineinfile:
           dest: /etc/pam.d/common-password
           line: 'password required pam_pwhistory.so remember=5'
+        ignore_errors: true
 
       - name: 5.3.4 Ensure password hashing algorithm is SHA-512
         command: authconfig --passalgo=sha512 --update
         changed_when: false
         failed_when: false
+        ignore_errors: true
 
       - name: 5.4.1.1 Ensure password expiration is 365 days or less
         lineinfile:
@@ -224,6 +228,7 @@
           dest: /etc/login.defs
           regexp: '^PASS_MAX_DAYS'
           line: "PASS_MAX_DAYS 365"
+        ignore_errors: true
 
       - name: 5.4.1.2 Ensure minimum days between password changes is 7 or more
         lineinfile:
@@ -231,6 +236,7 @@
           dest: /etc/login.defs
           regexp: '^PASS_MIN_DAYS'
           line: "PASS_MIN_DAYS 7"
+        ignore_errors: true
 
       - name: 5.4.1.3 Ensure password expiration warning days is 7 or more
         lineinfile:
@@ -238,6 +244,7 @@
          dest: /etc/login.defs
          regexp: '^PASS_WARN_AGE'
          line: "PASS_WARN_AGE 7"
+        ignore_errors: true
         
       - name: 5.4.1.4 Ensure inactive password lock is 30 days or less
         lineinfile:
@@ -245,6 +252,7 @@
          dest: /etc/default/useradd
          regexp: '^INACTIVE'
          line: "INACTIVE=30"
+        ignore_errors: true
         
       - name: 5.4.1.5 Ensure all users last password change date is in the past
         command: /bin/true
@@ -262,11 +270,13 @@
               fi
              done
         changed_when: false
+        ignore_errors: true
 
       - name: 5.4.3 Ensure default group for the root account is GID 0
         command: usermod -g 0 root
         changed_when: false
         failed_when: false
+        ignore_errors: true
 
       - name: 5.4.4 Ensure default user umask is 027 or more restrictive
         block:
@@ -277,6 +287,7 @@
               create: true
               regexp: '^umask '
               line: 'umask 027'
+             ignore_errors: true
 
            - name: 5.4.4 Ensure default user umask is 027 or more restrictive (/etc/profile)
              lineinfile:
@@ -285,6 +296,7 @@
               create: true
               regexp: '^umask '
               line: 'umask 027'
+             ignore_errors: true
 
            - name: 5.4.4 Ensure default user umask is 027 or more restrictive (/etc/profile.d/99-umask.sh)
              lineinfile:
@@ -293,6 +305,7 @@
                create: true
                regexp: '^umask '
                line: 'umask 027'
+             ignore_errors: true
 
       - name: 5.4.5 Ensure default user shell timeout is 900 seconds or less
         block:
@@ -303,6 +316,7 @@
               create: true
               regexp: '^TMOUT='
               line: "TMOUT=900"
+             ignore_errors: true
 
            - name: 5.4.5 Ensure default user shell timeout is 900 seconds or less (/etc/profile)
              lineinfile:
@@ -311,6 +325,7 @@
                create: true
                regexp: '^TMOUT='
                line: "TMOUT=900"
+             ignore_errors: true
 
            - name: 5.4.5 Ensure default user shell timeout is 900 seconds or less (/etc/profile.d/99-tmout.sh)
              lineinfile:
@@ -319,6 +334,7 @@
                 create: true
                 regexp: '^TMOUT='
                 line: "TMOUT=900"
+             ignore_errors: true
 
       - name: 5.5 Ensure root login is restricted to system console
         command: /bin/true
@@ -330,6 +346,7 @@
             dest: /etc/pam.d/su
             regexp: '^(#)?auth\s+required\s+pam_wheel\.so'
             line: "auth           required        pam_wheel.so use_uid"
+        ignore_errors: true
      
       - name: 5.6 Ensure access to the su command is restricted (sudo group contains root)
         user:
