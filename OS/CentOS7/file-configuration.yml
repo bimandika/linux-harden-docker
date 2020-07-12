@@ -190,6 +190,7 @@
         patterns: "*.repo"
         register: yum_repos
         changed_when: no
+      ignore_errors: true
 
     - name: 1.2.2 Ensure gpgcheck is globally activated
       replace:
@@ -198,6 +199,7 @@
        replace: "gpgcheck=1"
        with_items:
          - "{{ yum_repos.files }}"
+      ignore_errors: true
 
     - name: 1.2.3 Ensure GPG keys are configured
       command: /bin/true
@@ -219,11 +221,13 @@
        weekday: "*"
        job: /usr/bin/aide.wrapper --config /etc/aide/aide.conf --check
       when: harden_131.rc == 0
+      ignore_errors: true
 
     - name: 1.4.1 Ensure permissions on bootloader config are configured
       stat:
        path: /etc/grub2.cfg
        register: grub_cfg
+      ignore_errors: true
 
     - name: 1.4.1 Ensure permissions on bootloader config are configured (Patch)
       file:
@@ -231,6 +235,7 @@
         owner: root
         group: root
         mode: 0600
+      ignore_errors: true
     
     - name: 1.4.2 Ensure bootloader password is set
       command: /bin/true
