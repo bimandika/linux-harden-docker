@@ -1,4 +1,4 @@
-- hosts: centos
+- hosts: rhel
   vars:
   tasks:
     - name: 3.1.1 Ensure IP forwarding is disabled

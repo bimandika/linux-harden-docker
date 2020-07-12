@@ -1,4 +1,4 @@
-- hosts: centos
+- hosts: rhel
   vars:
   tasks:
     - name: 2.1.1 Ensure chargen services are not enabled
