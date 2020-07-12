@@ -362,7 +362,7 @@
       yum:
        name: "*"
        state: latest
-       exclude: kernel*,perl*,openssh*
+       exclude: kernel*,perl*,openssh*,grub2*
       ignore_errors: true
       
 
