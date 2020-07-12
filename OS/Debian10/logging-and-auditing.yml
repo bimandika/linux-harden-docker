@@ -1,4 +1,4 @@
-- hosts: debian
+- hosts: ubuntu
   vars:
   tasks:
 

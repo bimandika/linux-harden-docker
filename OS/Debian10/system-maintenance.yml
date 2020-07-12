@@ -1,4 +1,4 @@
-- hosts: debian
+- hosts: ubuntu
   vars:
   tasks:
     - name: 6.1.1 Audit system file permissions
@@ -109,14 +109,17 @@
       failed_when: false
       with_items: "{{ uid_zero_accounts_except_root.stdout_lines }}"
       when: uid_zero_accounts_except_root.rc
+      ignore_errors: true
      
     - name: 6.2.6 Ensure root PATH Integrity
       command: /bin/true
       changed_when: false
+      ignore_errors: true
 
     - name: 6.2.7 Ensure all users' home directories exist
       command: /bin/true
       changed_when: false
+      ignore_errors: true
 
     - name: 6.2.8 Ensure users' home directories permissions are 750 or more restrictive
       shell: |
@@ -125,6 +128,7 @@
          chmod g-w,o-rwx $dir;
          done
       when: homes_with_perms.stdout | length > 0
+      ignore_errors: true
 
 
     - name: 6.2.9 Ensure users own their home directories
@@ -140,12 +144,14 @@
        state: absent
        dest: "~{{ item }}/.forward"
       with_items: "{{ users.stdout_lines }}"
+      ignore_errors: true
 
     - name: 6.2.12 Ensure no users have .netrc files
       file:
        state: absent
        dest: "~{{ item }}/.netrc"
       with_items: "{{ users.stdout_lines }}"
+      ignore_errors: true
 
     - name: 6.2.13 Ensure users' .netrc Files are not group or world accessible
       command: /bin/true
@@ -156,6 +162,7 @@
        state: absent
        dest: "~{{ item }}/.rhosts"
       with_items: "{{ users.stdout_lines }}"
+      ignore_errors: true
 
     - name: 6.2.15 Ensure all groups in /etc/passwd exist in /etc/group
       command: /bin/true
