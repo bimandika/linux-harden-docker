@@ -362,7 +362,7 @@
       yum:
        name: "*"
        state: latest
-       exclude: kernel*,perl*,openssh*,grub2*,device-mapper*
+       exclude: device-mapper*
       ignore_errors: true
       
 
