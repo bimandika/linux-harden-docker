@@ -139,9 +139,9 @@
       block:
       - name: 2.2.1.1 Ensure time synchronization is in use (service install)
         yum:
-            name: ntp
-            state: present
-            install_recommends: false
+          name: ntp
+          state: present
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service start)
         service:
             name: ntp
