@@ -3,7 +3,7 @@
   tasks:
     - name: 5.1.1 Ensure cron daemon is enabled
       service:
-       name: cron
+       name: cronie
        enabled: true
 
     - name: 5.1.2 Ensure permissions on /etc/crontab are configured
