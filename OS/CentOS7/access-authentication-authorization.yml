@@ -2,9 +2,9 @@
   vars:
   tasks:
     - name: 5.1.1 Ensure cron daemon is enabled
-      service:
-       name: cronie
-       enabled: true
+      systemd:
+       name: crond
+       enabled: yes
 
     - name: 5.1.2 Ensure permissions on /etc/crontab are configured
       file:
