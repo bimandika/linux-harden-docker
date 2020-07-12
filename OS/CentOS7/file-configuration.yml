@@ -168,9 +168,9 @@
       failed_when: no
 
     - name: 1.1.21 Disable Automounting
-      systemd: 
-         name: autofs
-         enabled: no
+      systemd:
+        name: autofs
+        enabled: no
       ignore_errors: true
 
     - name: 1.2.1 Ensure package manager repositories are configured
@@ -189,7 +189,6 @@
         paths: /etc/yum.repos.d
         patterns: "*.repo"
         register: yum_repos
-        changed_when: no
       ignore_errors: true
 
     - name: 1.2.2 Ensure gpgcheck is globally activated
@@ -226,12 +225,11 @@
     - name: 1.4.1 Ensure permissions on bootloader config are configured
       stat:
        path: /etc/grub2.cfg
-       register: grub_cfg
       ignore_errors: true
 
     - name: 1.4.1 Ensure permissions on bootloader config are configured (Patch)
       file:
-        path: "{{ grub_cfg.stat.lnk_source }}"
+        path: /etc/grub2.cfg
         owner: root
         group: root
         mode: 0600
