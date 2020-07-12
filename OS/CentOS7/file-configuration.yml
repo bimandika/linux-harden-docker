@@ -280,7 +280,7 @@
       ignore_errors: true
 
     - name: 1.5.4 Ensure prelink is disabled
-      apt:
+      yum:
         name: prelink
         state: absent
 
