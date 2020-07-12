@@ -305,30 +305,35 @@
          name: rsh.socket
          state: stopped
         enabled: no
+        ignore_errors: true
 
       - name: 2.2.17 Ensure rsh server is not enabled | rlogin
         service:
          name: rlogin.socket
          state: stopped
          enabled: no
+        ignore_errors: true
             
       - name: 2.2.17 Ensure rsh server is not enabled | rexec
         service:
          name: rexec.socket
          state: stopped
          enabled: no
+        ignore_errors: true
 
       - name: 2.2.18 Ensure telnet server is not enabled
         service:
          name: telnet
          state: stopped
          enabled: no
+        ignore_errors: true
 
       - name: 2.2.19 Ensure tftp server is not enabled
         service:
          name: tftp
          state: stopped
          enabled: no
+        ignore_errors: true
 
       - name: 2.2.20 Ensure rsync service is not enabled
         service:
@@ -341,31 +346,37 @@
          name: ntalk
          state: stopped
          enabled: no
+        ignore_errors: true
 
       - name: 2.3.1 Ensure NIS Client is not installed
         yum:
          name: nis
          state: absent
+        ignore_errors: true
 
       - name: 2.3.2 Ensure rsh client is not installed
         yum:
          name: rsh
          state: absent
+        ignore_errors: true
 
       - name: 2.3.3 Ensure talk client is not installed
         yum:
          name: talk
          state: absent
+        ignore_errors: true
       
       - name: 2.3.4 Ensure telnet client is not installed
         yum:
          name: telnet
          state: absent
+        ignore_errors: true
 
       - name: 2.3.5 Ensure LDAP client is not installed
         yum:
          name: openldap-clients
          state: absent
+        ignore_errors: true
 
 
   
