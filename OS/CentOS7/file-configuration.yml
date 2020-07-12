@@ -362,7 +362,7 @@
       yum:
        name: "*"
        state: latest
-       update_cache: yes
+       exclude: kernel*,perl*,openssh*
       ignore_errors: true
       
 
