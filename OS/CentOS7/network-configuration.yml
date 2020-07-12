@@ -200,13 +200,14 @@
       yum:
        name: firewalld
        state: present
+      ignore_errors: true
 
     - name: 3.6.1 Ensure firewalld is installed and started
-      yum:
-       service:
-       name: firewalld
-       state: started
-       enabled: no
+      service:
+        name: firewalld
+        state: started
+        enabled: no
+      ignore_errors: true
       
     - name: 3.6.2 Ensure default deny firewall policy
       command: /bin/true
