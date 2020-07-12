@@ -359,9 +359,7 @@
       changed_when: false
 
     - name: 1.8 Ensure updates, patches, and additional security software are installed
-      yum:
-       name: "*"
-       state: latest
+      shell: yum -y update
       ignore_errors: true
       
 
