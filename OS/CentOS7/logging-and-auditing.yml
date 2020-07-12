@@ -3,7 +3,7 @@
   tasks:
 
     - name: 4.1 Configure System Accounting
-      apt:
+      yum:
        name: auditd
        state: present
 
