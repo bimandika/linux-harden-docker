@@ -308,7 +308,6 @@
          dest: /etc/postfix/main.cf
          regexp: "^(#)?inet_interfaces"
          line: "inet_interfaces = loopback-only"
-        notify: systemctl restart postfix
         ignore_errors: true
 
       - name: 2.2.16 Ensure NIS Server is not enabled
