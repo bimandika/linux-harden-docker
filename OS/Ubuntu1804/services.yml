@@ -278,6 +278,7 @@
          name: isc-dhcp-server6
          state: stopped
         enabled: false
+        ignore_errors: true
 
       - name: 2.2.6 Ensure LDAP server is not enabled
         service:
