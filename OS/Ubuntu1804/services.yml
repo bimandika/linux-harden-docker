@@ -257,82 +257,96 @@
          name: avahi-daemon
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.4 Ensure CUPS is not enabled
         service:
          name: cups
          state: stopped
          enabled: false
+        ignore_errors: true
     
       - name: 2.2.5 Ensure DHCP Server is not enabled
         service:
          name: isc-dhcp-server
          state: stopped
          enabled: false
+        ignore_errors: true
+
       - name: 2.2.5 Ensure DHCP Server is not enabled (ipv6)
         service:
          name: isc-dhcp-server6
          state: stopped
-         enabled: false
+        enabled: false
 
       - name: 2.2.6 Ensure LDAP server is not enabled
         service:
          name: slapd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.7 Ensure NFS and RPC are not enabled
         service:
          name: nfs-server
          state: stopped
          enabled: false
+        ignore_errors: true
       - name: 2.2.7 Ensure NFS and RPC are not enabled (rpcbind)
         service:
          name: rpcbind
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.8 Ensure DNS Server is not enabled
         service:
          name: bind9
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.9 Ensure FTP Server is not enabled
         service:
          name: vsftpd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.10 Ensure HTTP server is not enabled
         service:
          name: apache2
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.11 Ensure IMAP and POP3 server is not enabled
         service:
          name: dovecot
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.12 Ensure Samba is not enabled
         service:
          name: smbd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.13 Ensure HTTP Proxy Server is not enabled
         service:
          name: squid
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.14 Ensure SNMP Server is not enabled
         service:
          name: snmpd
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (checker)
         command: dpkg -s postfix
@@ -343,48 +357,57 @@
          regexp: "^(#)?inet_interfaces"
          line: "inet_interfaces = localhost"
         when: ensure_postfix.rc == 0
+        ignore_errors: true
 
       - name: 2.2.16 Ensure rsync service is not enabled
         service:
          name: rsync
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.17 Ensure NIS Server is not enabled
         service:
          name: nis
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.3.1 Ensure NIS Client is not installed
         apt:
          name: nis
          state: absent
+        ignore_errors: true
 
       - name: 2.3.2 Ensure rsh client is not installed (rsh-redone)
         apt:
          name: rsh-redone-client
          state: absent
+        ignore_errors: true
 
       - name: 2.3.2 Ensure rsh client is not installed
         apt:
          name: rsh-client
          state: absent
+        ignore_errors: true
 
       - name: 2.3.3 Ensure talk client is not installed
         apt:
          name: talk
          state: absent
+        ignore_errors: true
       
       - name: 2.3.4 Ensure telnet client is not installed
         apt:
          name: telnet
          state: absent
+        ignore_errors: true
 
       - name: 2.3.5 Ensure LDAP client is not installed
         apt:
          name: ldap-utils
          state: absent
+        ignore_errors: true
 
 
   
