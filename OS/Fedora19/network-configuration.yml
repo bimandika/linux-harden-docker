@@ -1,4 +1,4 @@
-- hosts: centos
+- hosts: fedora
   vars:
   tasks:
     - name: 3.1.1 Ensure IP forwarding is disabled

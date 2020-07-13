@@ -1,4 +1,4 @@
-- hosts: centos
+- hosts: fedora
   vars:
   tasks:
     - name: 1.1.1.1 Ensure mounting of cramfs filesystems is disabled
