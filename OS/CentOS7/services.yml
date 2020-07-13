@@ -218,6 +218,7 @@
          name: avahi-daemon
          state: stopped
          enabled: false
+        ignore_errors: true
 
       - name: 2.2.4 Ensure CUPS is not enabled
         service:
