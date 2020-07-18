@@ -1,5 +1,4 @@
 - hosts: centos
-  accelerate: true
   gather_facts: no
   vars:
   tasks:
