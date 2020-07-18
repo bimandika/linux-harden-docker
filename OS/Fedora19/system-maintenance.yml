@@ -1,4 +1,5 @@
 - hosts: fedora
+  gather_facts: no
   vars:
   tasks:
     - name: 6.1.1 Audit system file permissions
