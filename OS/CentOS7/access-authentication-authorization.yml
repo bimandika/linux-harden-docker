@@ -1,4 +1,6 @@
 - hosts: centos
+  accelerate: true
+  gather_facts: no
   vars:
   tasks:
     - name: 5.1.1 Ensure cron daemon is enabled

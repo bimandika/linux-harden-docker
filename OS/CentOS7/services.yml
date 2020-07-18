@@ -1,4 +1,6 @@
 - hosts: centos
+  accelerate: true
+  gather_facts: no
   vars:
   tasks:
     - name: 2.1.1 Ensure chargen services are not enabled

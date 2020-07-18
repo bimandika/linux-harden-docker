@@ -1,4 +1,6 @@
 - hosts: centos
+  accelerate: true
+  gather_facts: no
   vars:
   tasks:
     - name: 1.1.1.1 Ensure mounting of cramfs filesystems is disabled
