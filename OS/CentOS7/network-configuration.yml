@@ -230,6 +230,13 @@
       command: /bin/true
       changed_when: false
 
+    - name: additional
+      sysctl:
+       name: net.ipv4.tcp_timestamps
+       value: '0'
+       state: present
+       reload: true
+       ignoreerrors: true
 
     
     
