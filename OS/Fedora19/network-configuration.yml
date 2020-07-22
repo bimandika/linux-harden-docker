@@ -168,6 +168,7 @@
        owner: root
        group: root
        mode: 0644
+      ignore_errors: true
   
     - name: 3.5.1 Ensure DCCP is disabled
       lineinfile:
