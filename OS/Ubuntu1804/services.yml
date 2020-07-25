@@ -254,10 +254,12 @@
         apt:
           name: "@X Window System"
           state: absent
+        ignore_errors: true
       - name: 2.2.2 Ensure X Window System is not installed
         apt:
           name: "x11*"
           state: absent
+        ignore_errors: true
 
       - name: 2.2.3 Ensure Avahi Server is not enabled
         service:
