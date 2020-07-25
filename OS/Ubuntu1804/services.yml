@@ -361,6 +361,8 @@
       - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (checker)
         command: dpkg -s postfix
         register: ensure_postfix
+        ignore_errors: true
+        
       - name: 2.2.15 Ensure mail transfer agent is configured for local-only mode (config)
         lineinfile:
          dest: /etc/postfix/main.cf
