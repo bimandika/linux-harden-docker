@@ -235,6 +235,7 @@
          owner: root
          group: root
          mode: 0644
+        ignore_errors: true
       - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
         lineinfile:
          dest: /etc/sysconfig/chronyd
@@ -242,6 +243,7 @@
          line: "OPTIONS=\"-u chrony\""
          state: present
          create: true
+        ignore_errors: true
       - name: 2.2.1.3 Ensure chrony is configured (modify /etc/sysconfig/chronyd)
         service:
           name: chronyd
