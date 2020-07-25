@@ -186,21 +186,25 @@
             name: ntp
             state: present
             install_recommends: false
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service start)
         service:
             name: ntp
             state: started
             enabled: true
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service stop ntp)
         service:
             name: ntp
             state: stopped
             enabled: false
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service install)
         apt:
           name: chrony
           state: present
           install_recommends: false
+        ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service stop chrony)
         service:
             name: chronyd
