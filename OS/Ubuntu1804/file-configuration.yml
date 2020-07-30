@@ -151,9 +151,8 @@
       ignore_errors: true
 
     - name: 1.2.1 Ensure package manager repositories are configured
-      apt:
-       update_cache: yes
-      ignore_errors: true
+      command: /bin/true
+      changed_when: false
 
 
     - name: 1.2.2 Ensure GPG keys are configured
@@ -324,10 +323,8 @@
       when: gtk_check.rc == 0
 
     - name: 1.8 Ensure updates, patches, and additional security software are installed
-      apt:
-       update_cache: yes
-      ignore_errors: true
-
+      command: /bin/true
+      changed_when: false
       
 
 
