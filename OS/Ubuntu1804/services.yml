@@ -182,8 +182,10 @@
     - name: 2.2.1.1 Ensure time synchronization is in use
       block:
       - name: 2.2.1.1 Ensure time synchronization is in use (service install)
-        command: /bin/true
-        changed_when: false
+        apt:
+            name: ntp
+            state: present
+            install_recommends: false
         ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service start)
         service:
@@ -198,8 +200,10 @@
             enabled: false
         ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service install)
-        command: /bin/true
-        changed_when: false
+        apt:
+          name: chrony
+          state: present
+          install_recommends: false
         ignore_errors: true
       - name: 2.2.1.1 Ensure time synchronization is in use (service stop chrony)
         service:
