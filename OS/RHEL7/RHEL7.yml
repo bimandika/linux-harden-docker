@@ -1,6 +1,0 @@
-- include: file-configuration.yml
-- include: services.yml
-- include: network-configuration.yml
-- include: logging-and-auditing.yml
-- include: access-authentication-authorization.yml
-- include: system-maintenance.yml
