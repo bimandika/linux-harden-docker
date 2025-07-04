@@ -1,8 +1,4 @@
-Here’s a **fancy README** template for your repository, incorporating the structure and the process for building and deploying the Dockerized environment with Ansible configurations.
-
----
-
-# Linux Hardening for Docker
+# Linux Hardening using Docker
 
 ## 🔐 **Overview**
 
