@@ -32,11 +32,17 @@ RUN git clone https://github.com/bimandika/linux-harden-docker.git
 # Set the working directory to the cloned repository
 WORKDIR /workspace/linux-harden-docker
 
-# Create a script that will be executed when the container runs
+# Create a script to handle multiple hosts and run playbooks
 RUN echo "#!/bin/bash\n\
-    echo \"[target]\n\
-    $HOST ansible_user=$USER ansible_ssh_pass=$PASSWORD\" > /workspace/inventory.ini\n\
-    ansible-playbook -i /workspace/inventory.ini OS/$DISTRO/${DISTRO}_hardening.yml" > /workspace/run_hardening.sh && chmod +x /workspace/run_hardening.sh
+    # Generate the Ansible inventory file\n\
+    echo \"[targets]\" > /workspace/inventory.ini\n\
+    IFS=',' read -ra ADDR <<< \$HOSTS\n\
+    for host in \"\${ADDR[@]}\"\n\
+    do\n\
+        echo \"\$host ansible_user=\$USER ansible_ssh_pass=\$PASSWORD\" >> /workspace/inventory.ini\n\
+    done\n\
+    # Run the Ansible playbook for the specified distribution\n\
+    ansible-playbook -i /workspace/inventory.ini OS/\$DISTRO/\$DISTRO_hardening.yml" > /workspace/run_hardening.sh && chmod +x /workspace/run_hardening.sh
 
-# Provide an easy entrypoint to run the hardening playbook based on the DISTRO variable
+# Provide an easy entrypoint to run the hardening playbook
 ENTRYPOINT ["/bin/bash", "/workspace/run_hardening.sh"]
