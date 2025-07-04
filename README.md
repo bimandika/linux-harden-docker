@@ -120,21 +120,8 @@ This repository includes **Ansible playbooks** for the following Linux distribut
 
 * **Security Considerations**: While this repository follows **CIS Benchmark** best practices, it is not an official **CIS-certified** tool. It is designed to help you improve security by automating configuration hardening.
 
----
-
-## 📝 **Contributing**
-
-Contributions are welcome! If you'd like to improve the repository, add features, or fix bugs, feel free to fork the repository and submit a pull request.
-
-### **How to Contribute**:
-
-1. Fork the repository.
-2. Create a new branch.
-3. Make your changes.
-4. Submit a pull request with a description of your changes.
-
----
-
+--
+=
 
 ## 🌟 **Acknowledgements**
 
